@@ -1,0 +1,60 @@
+{
+	"LBR20": {
+		"details": "Netgear LBR20",
+		"type": "2",
+		"build": "2102",
+		"config": ".config_lbr20",
+		"image1": "openwrt-ipq40xx-generic-netgear_lbr20-squashfs-sysupgrade.bin",	
+		"image2": "openwrt-ipq40xx-generic-netgear_lbr20-squashfs-factory.img",
+		"imagepath": "/ipq40xx/generic/",
+		"mod": "Netgear-LBR20",
+		"ext1": "-upgrade.bin",
+		"ext2": "-factory.img",
+		"addons": ["readme.pdf"]
+	},
+	"RASPPI5": {
+		"details": "Raspberry Pi 5 SD",
+		"type": "3",
+		"build": "2102",
+		"config": ".config_rasppi5",
+		"prescript": "/target/linux/bcm27xx/image/sdcard.sh sd",
+		"image1": "openwrt-bcm27xx-bcm2712-rpi-5-ext4-factory.img.gz",
+		"image2": "openwrt-bcm27xx-bcm2712-rpi-5-ext4-factory.img",
+		"image3": "openwrt-bcm27xx-bcm2712-rpi-5-squashfs-sysupgrade.img.gz",
+		"image4": "openwrt-bcm27xx-bcm2712-rpi-5-squashfs-sysupgrade.img",
+		"imagepath": "/bcm27xx/bcm2712/",
+		"mod": "RaspberryPi-5-SD",
+		"ext1": "-ext4.img",
+		"ext2": "-squashfs.img",
+		"addons": ["readme.pdf"]
+	},
+	"RASPPI5USB": {
+		"details": "Raspberry Pi 5 USB",
+		"type": "3",
+		"build": "2102",
+		"config": ".config_rasppi5",
+		"prescript": "/target/linux/bcm27xx/image/sdcard.sh usb",
+		"postscript": "/target/linux/bcm27xx/image/sdcard.sh sd",
+		"image1": "openwrt-bcm27xx-bcm2712-rpi-5-ext4-factory.img.gz",
+		"image2": "openwrt-bcm27xx-bcm2712-rpi-5-ext4-factory.img",
+		"image3": "openwrt-bcm27xx-bcm2712-rpi-5-squashfs-sysupgrade.img.gz",
+		"image4": "openwrt-bcm27xx-bcm2712-rpi-5-squashfs-sysupgrade.img",
+		"imagepath": "/bcm27xx/bcm2712/",
+		"mod": "RaspberryPi-5-USB",
+		"ext1": "-ext4.img",
+		"ext2": "-squashfs.img",
+		"addons": ["readme.pdf"]
+	},
+	"BPI4": {
+		"details": "Banana Pi4",
+		"type": "2",
+		"build": "2305",
+		"config": ".config_bpi4",
+		"image1": "openwrt-mediatek-filogic-bananapi_bpi-r4-squashfs-sysupgrade.itb",
+		"image2": "openwrt-mediatek-filogic-bananapi_bpi-r4-sdcard.img.gz",
+		"imagepath": "/mediatek/filogic/",
+		"mod": "Banana-Pi4",
+		"ext1": "-upgrade.itb",
+		"ext2": "-sdcard.img.gz"
+	}
+}
