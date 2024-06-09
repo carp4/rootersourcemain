@@ -1,0 +1,22 @@
+Source-Makefile: feeds/packages/utils/nsutils/Makefile
+
+Package: nsutils
+Version: 0.2-2022-05-13-d6570bdec8435dfc781b95f6b404dedf965294dd-r2
+Depends: +libc +libcap
+Conflicts: 
+Menu-Depends: 
+Provides: 
+Section: utils
+Category: Utilities
+Repository: base
+Title: Linux namespace utilities
+Maintainer: Oskari Rauta <oskari.rauta@gmail.com>
+Source: nsutils-0.2-2022-05-13-d6570bdec8435dfc781b95f6b404dedf965294dd.tar.zst
+License: GPL-2.0-only
+LicenseFiles: COPYING
+URL: https://github.com/rd235/nsutils
+Type: ipkg
+Description:   Nsutils suite includes a number of utilities to list, add/remove tag, and join namespaces.
+@@
+
+

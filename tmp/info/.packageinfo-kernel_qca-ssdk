@@ -1,0 +1,19 @@
+Source-Makefile: package/kernel/qca-ssdk/Makefile
+
+Package: kmod-qca-ssdk
+Submenu: Network Devices
+Version: <LINUX_VERSION>.2024.04.17~3d060f7ad70d087f6b0452abe79ab6d042e8cd53-r2
+Depends: @(TARGET_qualcommax)
+Conflicts: 
+Menu-Depends: 
+Provides: 
+Section: kernel
+Category: Kernel modules
+Title: Qualcom SSDK switch driver
+Maintainer: 
+Source: qca-ssdk-2024.04.17~3d060f7ad70d087f6b0452abe79ab6d042e8cd53.tar.zst
+Type: ipkg
+Description: Qualcom SSDK switch driver
+@@
+
+

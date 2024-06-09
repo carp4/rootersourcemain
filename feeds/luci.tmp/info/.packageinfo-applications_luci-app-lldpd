@@ -1,0 +1,99 @@
+Source-Makefile: feeds/luci/applications/luci-app-lldpd/Makefile
+Build-Depends: lua/host luci-base/host LUCI_CSSTIDY:csstidy/host LUCI_SRCDIET:luasrcdiet/host 
+
+Package: luci-app-lldpd
+Submenu: 3. Applications
+Version: x
+Depends: +libc +lldpd +rpcd-mod-ucode
+Conflicts: 
+Menu-Depends: 
+Provides: 
+Section: luci
+Category: LuCI
+Repository: base
+Title: LuCI support for LLDP daemon
+Maintainer: OpenWrt LuCI community
+Source: 
+License: MIT
+URL: https://github.com/openwrt/luci
+Type: ipkg
+Description: LuCI support for LLDP daemon
+@@
+
+Package: luci-i18n-lldpd-lt
+Default: LUCI_LANG_lt||(ALL&&m)
+Version: x
+Depends: +libc luci-app-lldpd
+Conflicts: 
+Menu-Depends: 
+Provides: 
+Section: luci
+Category: LuCI
+Repository: base
+Title: luci-app-lldpd - lt translation
+Maintainer: 
+Source: 
+License: MIT
+Type: ipkg
+Hidden: 1
+Description:     Translation for luci-app-lldpd - Lietuvių (Lithuanian)
+@@
+
+Package: luci-i18n-lldpd-pl
+Default: LUCI_LANG_pl||(ALL&&m)
+Version: x
+Depends: +libc luci-app-lldpd
+Conflicts: 
+Menu-Depends: 
+Provides: 
+Section: luci
+Category: LuCI
+Repository: base
+Title: luci-app-lldpd - pl translation
+Maintainer: 
+Source: 
+License: MIT
+Type: ipkg
+Hidden: 1
+Description:     Translation for luci-app-lldpd - Polski (Polish)
+@@
+
+Package: luci-i18n-lldpd-ru
+Default: LUCI_LANG_ru||(ALL&&m)
+Version: x
+Depends: +libc luci-app-lldpd
+Conflicts: 
+Menu-Depends: 
+Provides: 
+Section: luci
+Category: LuCI
+Repository: base
+Title: luci-app-lldpd - ru translation
+Maintainer: 
+Source: 
+License: MIT
+Type: ipkg
+Hidden: 1
+Description:     Translation for luci-app-lldpd - Русский (Russian)
+@@
+
+Package: luci-i18n-lldpd-zh-cn
+Default: LUCI_LANG_zh_Hans||(ALL&&m)
+Version: x
+Depends: +libc luci-app-lldpd
+Conflicts: 
+Menu-Depends: 
+Provides: 
+Section: luci
+Category: LuCI
+Repository: base
+Title: luci-app-lldpd - zh-cn translation
+Maintainer: 
+Source: 
+License: MIT
+Type: ipkg
+Hidden: 1
+Description:     Translation for luci-app-lldpd - 简体中文 (Chinese Simplified)
+@@
+
+

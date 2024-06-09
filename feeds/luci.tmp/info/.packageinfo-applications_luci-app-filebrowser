@@ -1,0 +1,156 @@
+Source-Makefile: feeds/luci/applications/luci-app-filebrowser/Makefile
+Build-Depends: lua/host luci-base/host LUCI_CSSTIDY:csstidy/host LUCI_SRCDIET:luasrcdiet/host 
+
+Package: luci-app-filebrowser
+Submenu: 3. Applications
+Version: 1.1.0-1
+Depends: +libc +luci-base
+Conflicts: 
+Menu-Depends: 
+Provides: 
+Section: luci
+Category: LuCI
+Repository: base
+Title: LuCI File Browser module
+Maintainer: OpenWrt LuCI community
+Source: 
+License: Apache-2.0
+URL: https://github.com/openwrt/luci
+Type: ipkg
+Description: LuCI File Browser module
+@@
+
+Package: luci-i18n-filebrowser-lt
+Default: LUCI_LANG_lt||(ALL&&m)
+Version: x
+Depends: +libc luci-app-filebrowser
+Conflicts: 
+Menu-Depends: 
+Provides: 
+Section: luci
+Category: LuCI
+Repository: base
+Title: luci-app-filebrowser - lt translation
+Maintainer: Sergey Ponomarev <stokito@gmail.com>
+Source: 
+License: Apache-2.0
+Type: ipkg
+Hidden: 1
+Description:     Translation for luci-app-filebrowser - Lietuvių (Lithuanian)
+@@
+
+Package: luci-i18n-filebrowser-pl
+Default: LUCI_LANG_pl||(ALL&&m)
+Version: x
+Depends: +libc luci-app-filebrowser
+Conflicts: 
+Menu-Depends: 
+Provides: 
+Section: luci
+Category: LuCI
+Repository: base
+Title: luci-app-filebrowser - pl translation
+Maintainer: Sergey Ponomarev <stokito@gmail.com>
+Source: 
+License: Apache-2.0
+Type: ipkg
+Hidden: 1
+Description:     Translation for luci-app-filebrowser - Polski (Polish)
+@@
+
+Package: luci-i18n-filebrowser-ru
+Default: LUCI_LANG_ru||(ALL&&m)
+Version: x
+Depends: +libc luci-app-filebrowser
+Conflicts: 
+Menu-Depends: 
+Provides: 
+Section: luci
+Category: LuCI
+Repository: base
+Title: luci-app-filebrowser - ru translation
+Maintainer: Sergey Ponomarev <stokito@gmail.com>
+Source: 
+License: Apache-2.0
+Type: ipkg
+Hidden: 1
+Description:     Translation for luci-app-filebrowser - Русский (Russian)
+@@
+
+Package: luci-i18n-filebrowser-sv
+Default: LUCI_LANG_sv||(ALL&&m)
+Version: x
+Depends: +libc luci-app-filebrowser
+Conflicts: 
+Menu-Depends: 
+Provides: 
+Section: luci
+Category: LuCI
+Repository: base
+Title: luci-app-filebrowser - sv translation
+Maintainer: Sergey Ponomarev <stokito@gmail.com>
+Source: 
+License: Apache-2.0
+Type: ipkg
+Hidden: 1
+Description:     Translation for luci-app-filebrowser - Svenska (Swedish)
+@@
+
+Package: luci-i18n-filebrowser-tr
+Default: LUCI_LANG_tr||(ALL&&m)
+Version: x
+Depends: +libc luci-app-filebrowser
+Conflicts: 
+Menu-Depends: 
+Provides: 
+Section: luci
+Category: LuCI
+Repository: base
+Title: luci-app-filebrowser - tr translation
+Maintainer: Sergey Ponomarev <stokito@gmail.com>
+Source: 
+License: Apache-2.0
+Type: ipkg
+Hidden: 1
+Description:     Translation for luci-app-filebrowser - Türkçe (Turkish)
+@@
+
+Package: luci-i18n-filebrowser-uk
+Default: LUCI_LANG_uk||(ALL&&m)
+Version: x
+Depends: +libc luci-app-filebrowser
+Conflicts: 
+Menu-Depends: 
+Provides: 
+Section: luci
+Category: LuCI
+Repository: base
+Title: luci-app-filebrowser - uk translation
+Maintainer: Sergey Ponomarev <stokito@gmail.com>
+Source: 
+License: Apache-2.0
+Type: ipkg
+Hidden: 1
+Description:     Translation for luci-app-filebrowser - Українська (Ukrainian)
+@@
+
+Package: luci-i18n-filebrowser-zh-cn
+Default: LUCI_LANG_zh_Hans||(ALL&&m)
+Version: x
+Depends: +libc luci-app-filebrowser
+Conflicts: 
+Menu-Depends: 
+Provides: 
+Section: luci
+Category: LuCI
+Repository: base
+Title: luci-app-filebrowser - zh-cn translation
+Maintainer: Sergey Ponomarev <stokito@gmail.com>
+Source: 
+License: Apache-2.0
+Type: ipkg
+Hidden: 1
+Description:     Translation for luci-app-filebrowser - 简体中文 (Chinese Simplified)
+@@
+
+
