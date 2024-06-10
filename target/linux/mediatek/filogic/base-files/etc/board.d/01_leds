@@ -100,6 +100,12 @@ xiaomi,redmi-router-ax6000-stock|\
 xiaomi,redmi-router-ax6000-ubootmod)
 	ucidef_set_led_netdev "wan" "wan" "rgb:network" "wan"
 	;;
+huasifei,ws1698)
+	ucidef_set_led_netdev "wanact" "WANACT" "amber:gbe" "eth1"
+	ucidef_set_led_netdev "lan" "LAN" "green:lan" "br-lan"
+	ucidef_set_led_netdev "wlan2g" "WLAN2G" "amber:4g" "phy0-ap0"
+	ucidef_set_led_netdev "wlan5g" "WLAN5G" "green:4g" "phy1-ap0"
+	;;
 zbtlink,zbt-z8103ax)
 	ucidef_set_led_netdev "wan" "wan" "green:wan" "eth1" "link tx rx"
 	;;
