@@ -18,7 +18,7 @@ define Device/arcadyan_aw1000
 	DEVICE_DTS_CONFIG := config@hk09
 	SOC := ipq8072
 	DEVICE_PACKAGES := ipq-wifi-arcadyan_aw1000 kmod-spi-gpio \
-		kmod-gpio-nxp-74hc164 kmod-usb-serial-option uqmi
+		kmod-gpio-nxp-74hc164 kmod-usb-serial-option
 endef
 TARGET_DEVICES += arcadyan_aw1000
 
