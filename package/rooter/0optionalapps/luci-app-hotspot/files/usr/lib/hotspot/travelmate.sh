@@ -328,9 +328,9 @@ f_main()
 							fi
 						fi
 						
-						wifi up $(uci -q get wireless.wwan$wif.device)
-						ubus call network.interface.wwan$wif up
-                        ubus call network reload
+						#wifi up $(uci -q get wireless.wwan$wif.device)
+						#ubus call network.interface.wwan$wif up
+                        #ubus call network reload
 						
 						if [ -f "${FILE}" ]; then
 							# read list of selected Hotspots
@@ -351,10 +351,14 @@ f_main()
 									fi
 									uci -q set wireless.wwan$wif.key=$key
 									uci -q set wireless.wwan$wif.disabled=0
+									uci -q set wireless.wwan$wif.mode="sta"
 									uci -q commit wireless
+									
 									wifi up $(uci -q get wireless.wwan$wif.device)
-									ubus call network.interface.wwan$wif up
-                            		ubus call network reload
+									#ubus call network.interface.wwan$wif up
+                            		#ubus call network reload
+									ifup wwan$wif
+
 									f_log "info " "main    ::: wwan interface connected to uplink ${ssid}"
 									sleep 5
 									# wait and check for good connection
@@ -372,6 +376,7 @@ f_main()
 									done
 									cntx=0
 									#delay=$(uci -q get travelmate.global.delay)
+									ifup wwan$wif
 									f_check "sta"
 									f_log "info" "STA Status **${trm_ifstatus}**"
 									while [ "${trm_ifstatus}" != "true" ]; do
