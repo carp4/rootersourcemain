@@ -248,6 +248,8 @@
 };
 
 &pcie {
+	compatible = "mediatek,mt7981-pcie",
+				"mediatek,mt8192-pcie";
 	pinctrl-names = "default";
 	pinctrl-0 = <&pcie_pins>;
 	status = "okay";
