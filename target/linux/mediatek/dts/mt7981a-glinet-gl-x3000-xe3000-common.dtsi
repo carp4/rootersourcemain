@@ -60,8 +60,8 @@
 			gpios = <&pio 11 GPIO_ACTIVE_HIGH>;
 		};
 
-		5G_control {
-			gpio-export,name = "5G_control";
+		cellular-control {
+			gpio-export,name = "cellular-control";
 			gpio-export,output = <1>;
 			gpios = <&pio 9 GPIO_ACTIVE_HIGH>;
 		};
