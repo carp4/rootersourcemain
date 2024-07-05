@@ -196,5 +196,17 @@
 		"ext1": "-ext4.img",
 		"ext2": "-squashfs.img",
 		"addons": ["readme.pdf"]
+	},
+	"BPI3MINI": {
+		"details": "Banana Pi3 Mini",
+		"type": "2",
+		"build": "2305",
+		"config": ".config_bpi3mini",
+		"image1": "openwrt-mediatek-filogic-bananapi_bpi-r3-mini-snand-factory.bin",
+		"image2": "openwrt-mediatek-filogic-bananapi_bpi-r3-mini-squashfs-sysupgrade.itb",
+		"imagepath": "/mediatek/filogic/",
+		"mod": "Banana-Pi3-Mini",
+		"ext1": "-factory.bin",
+		"ext2": "-upgrade.itb"
 	}
 }
