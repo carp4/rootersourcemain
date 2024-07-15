@@ -208,5 +208,16 @@
 		"mod": "Banana-Pi3-Mini",
 		"ext1": "-factory.bin",
 		"ext2": "-upgrade.itb"
+	},
+	"MT2500": {
+		"details": "Gl.iNet MT2500",
+		"type": "1",
+		"build": "2305",
+		"package": "ext-nowifi",
+		"config": ".config_mt2500",
+		"image": "openwrt-mediatek-filogic-glinet_gl-mt2500-squashfs-sysupgrade.bin",
+		"imagepath": "/mediatek/filogic/",
+		"mod": "GliNet_MT2500",
+		"ext": "-upgrade.bin"
 	}
 }
