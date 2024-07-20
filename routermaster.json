@@ -219,5 +219,18 @@
 		"imagepath": "/mediatek/filogic/",
 		"mod": "GliNet_MT2500",
 		"ext": "-upgrade.bin"
+	},
+	"TR3000": {
+		"details": "Cudy TR3000",
+		"type": "2",
+		"build": "2305",
+		"config": ".config_tr3000",
+		"image1": "openwrt-mediatek-filogic-cudy_tr3000-v1-squashfs-sysupgrade.bin",
+		"image2": "openwrt-mediatek-filogic-cudy_tr3000-v1-initramfs-kernel.bin",
+		"imagepath": "/mediatek/filogic/",
+		"mod": "Cudy-TR3000",
+		"ext1": "-upgrade.bin",
+		"ext2": "-initramfs-kernel.bin",
+		"addons": ["readme.pdf", "cudy_tr3000-v1-sysupgrade.bin"]
 	}
 }
