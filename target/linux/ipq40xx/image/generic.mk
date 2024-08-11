@@ -1065,14 +1065,15 @@ endef
 TARGET_DEVICES += plasmacloud_pa2200
 
 define Device/qxwlan_e2600ac-c1
-	$(call Device/FitImage)
+	$(call Device/FitzImage)
 	DEVICE_VENDOR := Qxwlan
-	DEVICE_MODEL := E2600AC
+	DEVICE_MODEL := E2600AC-c1
 	DEVICE_VARIANT := C1
 	BOARD_NAME := e2600ac-c1
 	SOC := qcom-ipq4019
+	KERNEL_SIZE := 4096k
 	IMAGE_SIZE := 31232k
-	IMAGE/sysupgrade.bin := append-kernel | append-rootfs | pad-rootfs | append-metadata
+	IMAGE/sysupgrade.bin := append-kernel | pad-to $$$$(KERNEL_SIZE) | append-rootfs | pad-rootfs | append-metadata
 endef
 TARGET_DEVICES += qxwlan_e2600ac-c1
 
