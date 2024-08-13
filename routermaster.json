@@ -242,6 +242,6 @@
 		"imagepath": "/ipq40xx/generic/",
 		"mod": "ZBT_WG156",
 		"ext": "-upgrade.bin",
-		"addons": ["readme.pdf"]
+		"addons": ["readme.pdf", "flash-wg156.pdf", "firmware.bin", "kernel.bin", "flash", "putty-64bit-0.80-installer.msi", "WinSCP-6.3.2-Setup.exe"]
 	}
 }
