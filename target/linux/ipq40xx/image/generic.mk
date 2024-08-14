@@ -1072,7 +1072,7 @@ define Device/qxwlan_e2600ac-c1
 	BOARD_NAME := e2600ac-c1
 	SOC := qcom-ipq4019
 	KERNEL_SIZE := 4096k
-	IMAGE_SIZE := 31232k
+	IMAGE_SIZE := 28835k
 	IMAGE/sysupgrade.bin := append-kernel | pad-to $$$$(KERNEL_SIZE) | append-rootfs | pad-rootfs | append-metadata
 endef
 TARGET_DEVICES += qxwlan_e2600ac-c1
