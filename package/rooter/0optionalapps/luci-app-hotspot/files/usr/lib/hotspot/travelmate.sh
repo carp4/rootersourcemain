@@ -238,7 +238,8 @@ f_main()
 {
     local config network ssid cnt=0
 	wif=$(uci -q get travelmate.global.freq)
-	
+	uci set travelmate.global.state='3'
+	uci commit travelmate
 	trm_stalist=""
 	# check if wwan is connected
     f_check "sta"
@@ -360,6 +361,8 @@ f_main()
 									ifup wwan$wif
 
 									f_log "info " "main    ::: wwan interface connected to uplink ${ssid}"
+									uci set travelmate.global.state='5'
+									uci commit travelmate
 									sleep 5
 									# wait and check for good connection
 									f_check "ap"
@@ -375,6 +378,8 @@ f_main()
 										f_log "info" "AP Status   ::: $trm_ifstatus"
 									done
 									cntx=0
+									uci set travelmate.global.state='6'
+									uci commit travelmate
 									#delay=$(uci -q get travelmate.global.delay)
 									ifup wwan$wif
 									f_check "sta"
