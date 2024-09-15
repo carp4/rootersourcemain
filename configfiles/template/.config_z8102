@@ -113,6 +113,8 @@ CONFIG_TARGET_mediatek_filogic=y
 # CONFIG_TARGET_mediatek_filogic_DEVICE_xiaomi_redmi-router-ax6000-ubootmod is not set
 # CONFIG_TARGET_mediatek_filogic_DEVICE_yuncore_ax835 is not set
 CONFIG_TARGET_mediatek_filogic_DEVICE_zbtlink_zbt-z8102ax=y
+# CONFIG_TARGET_mediatek_filogic_DEVICE_z8102ax-64m is not set
+# CONFIG_TARGET_mediatek_filogic_DEVICE_z8102ax-128m is not set
 # CONFIG_TARGET_mediatek_filogic_DEVICE_zbtlink_zbt-z8103ax is not set
 # CONFIG_TARGET_mediatek_filogic_DEVICE_zyxel_ex5601-t0-stock is not set
 # CONFIG_TARGET_mediatek_filogic_DEVICE_zyxel_ex5601-t0-ubootmod is not set
@@ -144,8 +146,6 @@ CONFIG_DEFAULT_kmod-mt7915e=y
 CONFIG_DEFAULT_kmod-mt7981-firmware=y
 CONFIG_DEFAULT_kmod-nft-offload=y
 CONFIG_DEFAULT_kmod-phy-aquantia=y
-CONFIG_DEFAULT_kmod-usb-net-qmi-wwan=y
-CONFIG_DEFAULT_kmod-usb-serial-option=y
 CONFIG_DEFAULT_kmod-usb3=y
 CONFIG_DEFAULT_libc=y
 CONFIG_DEFAULT_libgcc=y
