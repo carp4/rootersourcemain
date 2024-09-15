@@ -243,5 +243,17 @@
 		"mod": "ZBT_WG156",
 		"ext": "-upgrade.bin",
 		"addons": ["readme.pdf", "flash-wg156.pdf", "firmware.bin", "kernel.bin", "flash", "putty-64bit-0.80-installer.msi", "WinSCP-6.3.2-Setup.exe"]
+	},
+	"Z8102": {
+		"details": "ZBT Z8102AX V1/V2",
+		"type": "6",
+		"build": "2305",
+		"config": ".config_z8102v2",
+		"image1": "ZBT-Z8102AX-V1",
+		"image2": "ZBT-Z8102AX-V2",
+		"imagepath": "/mediatek/filogic/",
+		"mod": "ZBT-Z8102AX",
+		"ext1": "-upgrade.bin",
+		"ext2": "-upgrade.bin"
 	}
 }
