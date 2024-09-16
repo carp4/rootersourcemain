@@ -255,5 +255,17 @@
 		"mod": "ZBT-Z8102AX",
 		"ext1": "-upgrade.bin",
 		"ext2": "-upgrade.bin"
+	},
+	"BPI4POE": {
+		"details": "Banana Pi4 POE",
+		"type": "2",
+		"build": "2305",
+		"config": ".config_bpi4poe",
+		"image1": "openwrt-mediatek-filogic-bananapi_bpi-r4-poe-squashfs-sysupgrade.itb",
+		"image2": "openwrt-mediatek-filogic-bananapi_bpi-r4-poe-sdcard.img.gz",
+		"imagepath": "/mediatek/filogic/",
+		"mod": "Banana-Pi4-2.5GBPS",
+		"ext1": "-upgrade.itb",
+		"ext2": "-sdcard.img.gz"
 	}
 }
