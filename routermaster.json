@@ -267,5 +267,17 @@
 		"mod": "Banana-Pi4-2.5GBPS",
 		"ext1": "-upgrade.itb",
 		"ext2": "-sdcard.img.gz"
+	},
+	"Z800": {
+		"details": "ZBT Z800AX",
+		"type": "2",
+		"build": "2305",
+		"config": ".config_z800",
+		"image1": "openwrt-qualcommax-ipq807x-zbtlink_zbt-z800ax-squashfs-sysupgrade.bin",
+		"image2": "openwrt-qualcommax-ipq807x-zbtlink_zbt-z800ax-squashfs-factory.bin",
+		"imagepath": "/qualcommax/ipq807x/",
+		"mod": "ZBT-Z800AX",
+		"ext1": "-upgrade.bin",
+		"ext2": "-factory.bin"
 	}
 }
