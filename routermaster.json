@@ -53,7 +53,7 @@
 		"image1": "openwrt-mediatek-filogic-bananapi_bpi-r4-squashfs-sysupgrade.itb",
 		"image2": "openwrt-mediatek-filogic-bananapi_bpi-r4-sdcard.img.gz",
 		"imagepath": "/mediatek/filogic/",
-		"mod": "Banana-Pi4",
+		"mod": "Banana-Pi-R4",
 		"ext1": "-upgrade.itb",
 		"ext2": "-sdcard.img.gz"
 	},
@@ -205,7 +205,7 @@
 		"image1": "openwrt-mediatek-filogic-bananapi_bpi-r3-mini-snand-factory.bin",
 		"image2": "openwrt-mediatek-filogic-bananapi_bpi-r3-mini-squashfs-sysupgrade.itb",
 		"imagepath": "/mediatek/filogic/",
-		"mod": "Banana-Pi3-Mini",
+		"mod": "Banana-Pi-R3-Mini",
 		"ext1": "-factory.bin",
 		"ext2": "-upgrade.itb"
 	},
@@ -264,7 +264,7 @@
 		"image1": "openwrt-mediatek-filogic-bananapi_bpi-r4-poe-squashfs-sysupgrade.itb",
 		"image2": "openwrt-mediatek-filogic-bananapi_bpi-r4-poe-sdcard.img.gz",
 		"imagepath": "/mediatek/filogic/",
-		"mod": "Banana-Pi4-2.5GBPS",
+		"mod": "Banana-Pi-R4-2.5GBPS",
 		"ext1": "-upgrade.itb",
 		"ext2": "-sdcard.img.gz"
 	},
