@@ -6146,7 +6146,7 @@ CONFIG_PACKAGE_wwan=y
 # CONFIG_PACKAGE_ext-domain is not set
 # CONFIG_PACKAGE_ext-logo is not set
 # CONFIG_PACKAGE_ext-menu is not set
-# CONFIG_PACKAGE_ext-mhi is not set
+CONFIG_PACKAGE_ext-mhi=y
 # CONFIG_PACKAGE_ext-netselect is not set
 # CONFIG_PACKAGE_ext-openwisp is not set
 # CONFIG_PACKAGE_ext-ota is not set
