@@ -201,6 +201,13 @@ if $QUECTEL; then
 	fi
 fi
 
+if [ "$idV" = "1199" ]; then
+	$ROOTER/connect/bandmask $CURRMODEM 0
+fi
+if [ "$idV" = "413c" ]; then
+	$ROOTER/connect/bandmask $CURRMODEM 3
+fi
+
 
 $ROOTER/common/gettype.sh $CURRMODEM
 $ROOTER/connect/get_profile.sh $CURRMODEM
