@@ -78,6 +78,7 @@ subdevice=${subdevice:2}
 PCI_VENDOR_ID_QCOM="17cb"
 PCI_VENDOR_ID_QUECTEL="1eac"
 PCI_VENDOR_ID_FOXCONN="105b"
+PCI_VENDOR_ID_FOXCONNHP="03f0"
 PCI_VENDOR_ID_THALES="1269"
 CURRMODEM=1
 
@@ -92,6 +93,18 @@ case "$vendor" in
 				uMa="Quectel"
 				uPid="0800"
 				uPr="RM520"
+			fi
+		
+		fi
+		if [ "$device" = 0306 ]; then
+			if [ "$subvendor" = 18d7 -a "$subdevice" = 0200 ]; then
+				uVid="1199"
+				uMa="Sierra"
+				uPid="90d3"
+				uPr="EM9190/9191"
+			else
+				log "Telit FN980 not supported"
+				exit 0
 			fi
 		
 		fi
@@ -115,10 +128,21 @@ case "$vendor" in
 		fi
 	;;
 	"$PCI_VENDOR_ID_FOXCONN" )
-		if [ "$device" = e0ab  -o "$device" = e0b0 -o "$device" = e0b1 -o "$device" = e0bf -o "$device" = e0c3 ]; then
+		if [ "$device" = e0ab  -o "$device" = e0b0 -o "$device" = e0b1 -o "$device" = e0bf -o "$device" = e0c3 -o "$device" = e0f5 -o "$device" = e0f9 -o "$device" = e0d9 -o "$device" = e0d8 -o "$device" = e118 -o "$device" = e11d -o "$device" = e11e ]; then
 			uVid="413c"
 			uMa="Foxconn"
-			uPid="81d8"
+			uPid="81d9"
+			uPr="T99W175"
+		else
+			log "Foxconn not supported"
+			exit 0
+		fi
+	;;
+	"$PCI_VENDOR_ID_FOXCONNHP" )
+		if [ "$device" = 0a6c ]; then
+			uVid="413c"
+			uMa="Foxconn"
+			uPid="81d9"
 			uPr="T99W175"
 		else
 			log "Foxconn not supported"
@@ -126,8 +150,21 @@ case "$vendor" in
 		fi
 	;;
 	"$PCI_VENDOR_ID_THALES" )
-		log "Thales not supported"
-		exit 0
+		if [ "$device" = 00b3 -o "$device" = 00b4 ]; then
+			uVid="1e2d"
+			uMa="Thales"
+			uPid="00b3"
+			uPr="MV31"
+		fi
+		if [ "$device" = 00ba -o "$device" = 00bb ]; then
+			uVid="1e2d"
+			uMa="Cinterion"
+			uPid="00ba"
+			uPr="MV32"
+		else
+			log "Thales not supported"
+			exit 0
+		fi
 	;;
 	
 esac
@@ -158,3 +195,24 @@ fi
 /usr/lib/rooter/mhi/create_mhi.sh $CURRMODEM
 
 exit 0
+
+
+Qualcomm X55 chipset 3GPP Rel.15
+Cinterion/Thales/Telit MV31-W	yes
+Dell DW5930e	yes
+Foxconn T99W175	yes
+Sierra EM9190/EM9191	yes
+Telit FN980 (at present no AT cmd over mhi)
+
+Qualcomm X62 chipset 3GPP Rel.16
+Dell DW5932e	yes
+Foxconn T99W373	yes
+
+Qualcomm X65 chipset 3GPP Rel.16
+Cinterion/Thales/Telit MV32-W yes
+Foxconn T99W368		yes
+Quectel RM520N-GL	yes
+
+Qualcomm X72 chipset 3GPP Rel.17
+Dell DW5934e	yes
+Foxconn T99W515	yes
