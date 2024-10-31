@@ -75,25 +75,62 @@ subvendor=${subvendor:2:4}
 subdevice=$(cat /sys/bus/pci/devices/$pcinum/subsystem_device)
 subdevice=${subdevice:2}
 
+PCI_VENDOR_ID_QCOM="17cb"
+PCI_VENDOR_ID_QUECTEL="1eac"
+PCI_VENDOR_ID_FOXCONN="105b"
+PCI_VENDOR_ID_THALES="1269"
 CURRMODEM=1
-if [ "$vendor" = 17cb -a  "$device" = 0308 ]; then
-	uVid="2c7c"
-	uMa="Quectel"
-	uPid="0800"
-	uPr="RM520"
-fi
-if [ "$vendor" = 1eac -a  "$device" = 1004 ]; then
-	uVid="2c7c"
-	uMa="Quectel"
-	uPid="0800"
-	uPr="RM520"
-fi
-if [ "$vendor" = 1eac -a  "$device" = 1007 ]; then
-	uVid="2c7c"
-	uMa="Quectel"
-	uPid="0800"
-	uPr="RM520"
-fi
+
+case "$vendor" in
+	"$PCI_VENDOR_ID_QCOM" )
+		if [ "$device" = 0308 ]; then
+			if [ "$subvendor" = 1c5d ]; then
+				log "Telit FN990 not supported"
+				exit 0
+			else
+				uVid="2c7c"
+				uMa="Quectel"
+				uPid="0800"
+				uPr="RM520"
+			fi
+		
+		fi
+	;;
+	"$PCI_VENDOR_ID_QUECTEL" )
+		if [ "$device" = 1004 -o "$device" = 1007 ]; then 
+			uVid="2c7c"
+			uMa="Quectel"
+			uPid="0800"
+			uPr="RM520"
+		fi
+		if [ "$device" = 1001  -o "$device" = 2001 ]; then
+			log "Quectel EM120 not supported"
+			exit 0
+		fi
+		if [ "$device" = 1002  -o "$device" = 100d ]; then
+			uVid="2c7c"
+			uMa="Quectel"
+			uPid="0620"
+			uPr="EM160"
+		fi
+	;;
+	"$PCI_VENDOR_ID_FOXCONN" )
+		if [ "$device" = e0ab  -o "$device" = e0b0 -o "$device" = e0b1 -o "$device" = e0bf -o "$device" = e0c3 ]; then
+			uVid="413c"
+			uMa="Foxconn"
+			uPid="81d8"
+			uPr="T99W175"
+		else
+			log "Foxconn not supported"
+			exit 0
+		fi
+	;;
+	"$PCI_VENDOR_ID_THALES" )
+		log "Thales not supported"
+		exit 0
+	;;
+	
+esac
 
 
 display_top; display "Start of Modem Detection and Connection Information"
@@ -119,3 +156,5 @@ if [ -e $ROOTER/modem-led.sh ]; then
 fi
 
 /usr/lib/rooter/mhi/create_mhi.sh $CURRMODEM
+
+exit 0
