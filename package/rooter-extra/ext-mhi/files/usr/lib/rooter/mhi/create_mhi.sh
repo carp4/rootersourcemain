@@ -80,7 +80,7 @@ get_connect() {
 
 CURRMODEM=$1
 source /tmp/variable.file
-
+log "Start MHI"
 MAN=$(uci get modem.modem$CURRMODEM.manuf)
 MOD=$(uci get modem.modem$CURRMODEM.model)
 BASEP=$(uci get modem.modem$CURRMODEM.baseport)
@@ -103,6 +103,11 @@ source /tmp/parmpass
 
 CPORT=`expr $CPORT + $BASEP`
 DPORT=`expr $DPORT + $BASEP`
+
+CPORT="92"
+DPORT="92"
+ln -fs /dev/wwan0at0 /dev/ttyUSB$CPORT
+
 uci set modem.modem$CURRMODEM.commport=$CPORT
 uci set modem.modem$CURRMODEM.dataport=$DPORT
 uci set modem.modem$CURRMODEM.service=$retval
@@ -381,4 +386,13 @@ rm -f /tmp/usbwait
 log "Modem Connected"
 if [ -e $ROOTER/modem-led.sh ]; then
 	$ROOTER/modem-led.sh $CURRMODEM 3
+fi
+
+ln -fs $ROOTER/connect/conmon.sh $ROOTER_LINK/con_monitor$CURRMODEM
+$ROOTER_LINK/con_monitor$CURRMODEM $CURRMODEM &
+uci set modem.modem$CURRMODEM.connected=1
+uci commit modem
+
+if [ -e $ROOTER/connect/postconnect.sh ]; then
+	$ROOTER/connect/postconnect.sh $CURRMODEM
 fi

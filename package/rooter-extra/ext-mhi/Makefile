@@ -9,7 +9,7 @@ PKG_RELEASE:=1
 
 PKG_MAINTAINER:=Created by DM/makefile by Cobia@whirlpool
 include $(INCLUDE_DIR)/package.mk
-
+#  +kmod-mhi-pci-generic
 define Package/ext-mhi
   SECTION:=utils
   CATEGORY:=ROOter
@@ -26,6 +26,10 @@ endef
 
 
 define Build/Compile
+endef
+
+define Package/ext-mhi/install
+	$(CP) ./files/* $(1)/
 endef
 
 $(eval $(call BuildPackage,ext-mhi))
