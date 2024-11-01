@@ -16,7 +16,7 @@ do_zone() {
 	config_get name $1 name
 	config_get network $1 network
 	newnet="$network"
-	if [ $name = wan ]; then
+	if [ $name = lan ]; then
 		WWAN=$(echo "$network" | grep "xlatd1")
 		if [ -z "$WWAN" ]; then
 			newnet="$newnet xlatd1"
