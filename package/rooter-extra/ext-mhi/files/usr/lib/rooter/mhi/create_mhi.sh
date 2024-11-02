@@ -258,6 +258,8 @@ uci set modem.modem$CURRMODEM.inter=$INTER
 uci commit modem
 log "Modem $CURRMODEM is using WAN$INTER"
 
+$ROOTER/connect/handlettl.sh $CURRMODEM 0 &
+
 log "Connect via MHI"
 if [ -e $ROOTER/modem-led.sh ]; then
 	$ROOTER/modem-led.sh $CURRMODEM 2
