@@ -135,7 +135,15 @@ esac
 
 display_top; display "Start of Modem Detection and Connection Information"
 display "Product=${uPr:-?} $vendor $device Sub $subvendor $subdevice"; display_bottom
-	
+
+list=$(ls /dev | grep "wwan0")
+echo "$list" > /tmp/devwwan
+i=1
+while IFS= read -r line; do
+	log "Interface Name : "$i" /dev/"$line
+	let i=$i+1
+done < /tmp/devwwan
+
 uci set modem.modem$CURRMODEM.empty=0
 uci set modem.modem$CURRMODEM.uVid=$uVid
 uci set modem.modem$CURRMODEM.uPid=$uPid
