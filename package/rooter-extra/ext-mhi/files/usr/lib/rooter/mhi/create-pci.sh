@@ -92,7 +92,8 @@ case "$vendor" in
 				uMa="Quectel"
 				uPid="0800"
 				uPr="RM520"
-				# subvendor - 17cb  subdevice - 5201
+				# subvendor - 17cb  subdevice - 5201	GLAA
+				# subvendor - 17cb  subdevice - 0308	GLAP
 				# subvendor - 1eac  subdevice - 3003
 			fi
 		
