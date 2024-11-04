@@ -30,6 +30,7 @@ if [ -e /etc/newstyle ]; then
 fi
 
 echo 1 > /tmp/gotpcie
+echo 1 > /tmp/gotpcie1
 
 if [ ! -f /tmp/bootend.file ]; then
 	log "Delay for boot up"
@@ -64,6 +65,25 @@ while IFS= read -r line; do
 		fi
 	fi
 done < /tmp/mhipci
+
+while [ ! -e /dev/wwan0at0 ]; do
+	sleep 1
+done
+ATCMDD="AT+QPOWD=0"
+OX=$($ROOTER/gcom/gcom-locked "/dev/wwan0at0" "run-at.gcom" "$CURRMODEM" "$ATCMDD")
+log "$OX"
+ATCMDD="AT+CFUN=1,1"
+OX=$($ROOTER/gcom/gcom-locked "/dev/wwan0at0" "run-at.gcom" "$CURRMODEM" "$ATCMDD")
+log "$OX"
+echo "1" > /sys/bus/pci/devices/$pcinum/remove
+log "Remove"
+sleep 20
+echo "1" > /sys/bus/pci/rescan
+log "Scan"
+while [ ! -e /dev/wwan0mbim0 ]; do
+	sleep 1
+done
+
 echo 'on' > /sys/devices/platform/soc/11280000.pcie/pci0000:00/0000:00:00.0/$pcinum/power/control
 vendor=$(cat /sys/bus/pci/devices/$pcinum/vendor)
 vendor=${vendor:2:4}
@@ -168,6 +188,6 @@ if [ -e $ROOTER/modem-led.sh ]; then
 	$ROOTER/modem-led.sh $CURRMODEM 1
 fi
 
+rm -f /tmp/gotpcie1
 /usr/lib/rooter/mhi/create_mhi.sh $CURRMODEM
 
-exit 0

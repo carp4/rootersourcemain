@@ -8,5 +8,7 @@ log() {
 }
 
 if [ $ACTION = "add" -a ${INTERFACE} = "mhi_hwip0" ]; then
-	/usr/lib/rooter/mhi/create-pci.sh &
+	if [ ! -e /tmp/gotpcie1 ]; then
+		/usr/lib/rooter/mhi/create-pci.sh &
+	fi
 fi
