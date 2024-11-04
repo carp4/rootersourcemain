@@ -107,8 +107,10 @@ case "$vendor" in
 			uPr="RM520"
 		fi
 		if [ "$device" = 1001  -o "$device" = 2001 ]; then
-			log "Quectel EM120 not supported"
-			exit 0
+			uVid="2c7c"
+			uMa="Quectel"
+			uPid="0620"
+			uPr="EM120"
 		fi
 		if [ "$device" = 1002  -o "$device" = 100d ]; then
 			uVid="2c7c"
