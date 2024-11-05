@@ -66,19 +66,22 @@ while IFS= read -r line; do
 	fi
 done < /tmp/mhipci
 
-while [ ! -e /dev/wwan0at0 ]; do
-	sleep 1
-done
-ATCMDD="AT+QPOWD=0"
-OX=$($ROOTER/gcom/gcom-locked "/dev/wwan0at0" "run-at.gcom" "$CURRMODEM" "$ATCMDD")
-log "$OX"
-ATCMDD="AT+CFUN=1,1"
-OX=$($ROOTER/gcom/gcom-locked "/dev/wwan0at0" "run-at.gcom" "$CURRMODEM" "$ATCMDD")
-log "$OX"
+port=$(basename $(dirname $(readlink "/sys/bus/pci/devices/$pcinum")))
+log "Port $port"
+bc=$(setpci -s $port BRIDGE_CONTROL)
+log "Bridge Control $bc"
+
 echo "1" > /sys/bus/pci/devices/$pcinum/remove
 log "Remove"
 sleep 20
-echo "1" > /sys/bus/pci/rescan
+setpci -s $port BRIDGE_CONTROL=$bc
+sleep 2
+if [ ! -e /dev/wwan0mbim0 ]; then
+	log "No Interface"
+else
+	log "Interface found"
+fi
+echo "1" > /sys/bus/pci/devices/$port/rescan
 log "Scan"
 while [ ! -e /dev/wwan0mbim0 ]; do
 	sleep 1
