@@ -66,27 +66,6 @@ while IFS= read -r line; do
 	fi
 done < /tmp/mhipci
 
-port=$(basename $(dirname $(readlink "/sys/bus/pci/devices/$pcinum")))
-log "Port $port"
-bc=$(setpci -s $port BRIDGE_CONTROL)
-log "Bridge Control $bc"
-
-echo "1" > /sys/bus/pci/devices/$pcinum/remove
-log "Remove"
-sleep 20
-setpci -s $port BRIDGE_CONTROL=$bc
-sleep 2
-if [ ! -e /dev/wwan0mbim0 ]; then
-	log "No Interface"
-else
-	log "Interface found"
-fi
-echo "1" > /sys/bus/pci/devices/$port/rescan
-log "Scan"
-while [ ! -e /dev/wwan0mbim0 ]; do
-	sleep 1
-done
-
 echo 'on' > /sys/devices/platform/soc/11280000.pcie/pci0000:00/0000:00:00.0/$pcinum/power/control
 vendor=$(cat /sys/bus/pci/devices/$pcinum/vendor)
 vendor=${vendor:2:4}
@@ -119,7 +98,19 @@ case "$vendor" in
 				# subvendor - 17cb  subdevice - 0308	GLAP
 				# subvendor - 1eac  subdevice - 3003
 			fi
-		
+		else
+			if [ "$device" = 0309 ]; then
+				if [ "$subvendor" = 17cb ]; then
+					uVid="2c7c"
+					uMa="Quectel"
+					uPid="0122"
+					uPr="RM551"
+					# subvendor - 17cb  subdevice - 0309
+				else
+					log "Modem not supported"
+					exit 0
+				fi
+			fi
 		fi
 	;;
 	"$PCI_VENDOR_ID_QUECTEL" )
