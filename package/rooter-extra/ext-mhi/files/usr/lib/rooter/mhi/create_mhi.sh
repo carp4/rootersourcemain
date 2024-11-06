@@ -278,6 +278,7 @@ STOPNET=`qmicli -p -d $DEVICE --wds-stop-network=disable-autoconnect 2>/dev/null
 AUTODIS=`qmicli -p -d $DEVICE --wds-set-autoconnect-settings=disabled 2>/dev/null`
 DEVICE_DATA_FORMAT_CMD="qmicli -p -d $DEVICE --wda-get-data-format"
 DEVICE_DATA_FORMAT_OUT=`$DEVICE_DATA_FORMAT_CMD`
+log "$DEVICE_DATA_FORMAT_OUT"
 DEVICE_LLP=`echo "$DEVICE_DATA_FORMAT_OUT" | sed -n "s/.*Link layer protocol:.*'\(.*\)'.*/\1/p"`
 SETFORM=`qmicli -p -d $DEVICE --wda-set-data-format="raw-ip" 2>/dev/null`
 
@@ -288,6 +289,7 @@ SETFORM=`qmicli -p -d $DEVICE --wda-set-data-format="raw-ip" 2>/dev/null`
 #
 START_NETWORK_ARGS="apn='$APN'"
 START_NETWORK_OUT=`qmicli -p -d $DEVICE --wds-start-network=$START_NETWORK_ARGS --client-no-release-cid 2>/dev/null`
+log "$START_NETWORK_OUT"
 CID=`echo "$START_NETWORK_OUT" | sed -n "s/.*CID.*'\(.*\)'.*/\1/p"`
 if [ -z "$CID" ]; then
 	log "error: network start failed, client not allocated"
@@ -305,16 +307,13 @@ if [ -z "$SIGNAL" ]; then
 	exit 0
 fi
 sstat=`qmicli -p -d $DEVICE --wds-get-packet-service-status`
+log "$sstat"
 ssc=$(echo "$sstat" | grep "connected")
 if [ -z "$ssc" ]; then
     log "error: network not connected"
 	exit 0
 fi
 log "Network Connected"
-START_NETWORK_ARGS="apn='$APN',ip-type=4"
-START_NETWORK_OUT=`qmicli -p -d $DEVICE--wds-start-network=$START_NETWORK_ARGS --client-no-release-cid 2>/dev/null`
-SET=`qmicli -p -d $DEVICE --wds-get-current-settings`
-
 qmicli -p -d $DEVICE --wds-get-current-settings > /tmp/mhisettings
 while IFS= read -r line; do
 	ipf=$(echo "$line" | grep "IP Family:")
