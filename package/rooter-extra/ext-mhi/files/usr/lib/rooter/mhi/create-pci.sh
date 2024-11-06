@@ -77,6 +77,9 @@ subvendor=${subvendor:2:4}
 subdevice=$(cat /sys/bus/pci/devices/$pcinum/subsystem_device)
 subdevice=${subdevice:2}
 
+display_top; display "Modem Vendor and Device ID"
+display "ID=$vendor $device Sub $subvendor $subdevice"; display_bottom
+
 PCI_VENDOR_ID_QCOM="17cb"
 PCI_VENDOR_ID_QUECTEL="1eac"
 PCI_VENDOR_ID_FOXCONN="105b"
