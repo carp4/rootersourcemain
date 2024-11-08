@@ -24,6 +24,15 @@ display() {
 	log "*"
 }
 
+save_variables() {
+	echo 'MODSTART="'"$MODSTART"'"' > /tmp/variable.file
+	echo 'WWAN="'"$WWAN"'"' >> /tmp/variable.file
+	echo 'USBN="'"$USBN"'"' >> /tmp/variable.file
+	echo 'ETHN="'"$ETHN"'"' >> /tmp/variable.file
+	echo 'WDMN="'"$WDMN"'"' >> /tmp/variable.file
+	echo 'BASEPORT="'"$BASEPORT"'"' >> /tmp/variable.file
+}
+
 ifname1="ifname"
 if [ -e /etc/newstyle ]; then
 	ifname1="device"
@@ -31,6 +40,7 @@ fi
 
 echo 1 > /tmp/gotpcie
 echo 1 > /tmp/gotpcie1
+echo 1 > /tmp/usbwait
 
 if [ ! -f /tmp/bootend.file ]; then
 	log "Delay for boot up"
@@ -42,6 +52,7 @@ if [ ! -f /tmp/bootend.file ]; then
 fi
 
 log "Connecting a MHI Modem"
+
 
 lspci -k > /tmp/mhipci
 while IFS= read -r line; do
@@ -66,6 +77,34 @@ while IFS= read -r line; do
 	fi
 done < /tmp/mhipci
 
+echo "1" > /sys/bus/pci/devices/$pcinum/remove
+log "PCi Remove"
+sleep 20
+echo "1" > /sys/bus/pci/rescan
+log "Rescan"
+
+MODCNT=2
+COUNTER=1
+retresult=0
+while [ $COUNTER -le $MODCNT ]; do
+	EMPTY=$(uci get modem.modem$COUNTER.empty)
+	if [ "$EMPTY" -ne 0 ]; then
+		retresult=$COUNTER
+		break
+	fi
+	let COUNTER=COUNTER+1
+done
+
+source /tmp/variable.file
+CURRMODEM=$MODSTART
+uci set modem.modem$CURRMODEM.empty=0
+uci commit modem
+echo "$retresult" > /tmp/gotpcie1
+log " CURRMODEM $retresult"
+
+MODSTART=`expr $MODSTART + 1`
+save_variables
+
 echo 'on' > /sys/devices/platform/soc/11280000.pcie/pci0000:00/0000:00:00.0/$pcinum/power/control
 vendor=$(cat /sys/bus/pci/devices/$pcinum/vendor)
 vendor=${vendor:2:4}
@@ -84,7 +123,6 @@ PCI_VENDOR_ID_QCOM="17cb"
 PCI_VENDOR_ID_QUECTEL="1eac"
 PCI_VENDOR_ID_FOXCONN="105b"
 PCI_VENDOR_ID_THALES="1269"
-CURRMODEM=1
 
 case "$vendor" in
 	"$PCI_VENDOR_ID_QCOM" )
@@ -95,7 +133,7 @@ case "$vendor" in
 			else
 				uVid="2c7c"
 				uMa="Quectel"
-				uPid="0800"
+				uPid="0801"
 				uPr="RM520"
 				# subvendor - 17cb  subdevice - 5201	GLAA
 				# subvendor - 17cb  subdevice - 0308	GLAP
@@ -120,7 +158,7 @@ case "$vendor" in
 		if [ "$device" = 1004 -o "$device" = 1007 ]; then 
 			uVid="2c7c"
 			uMa="Quectel"
-			uPid="0800"
+			uPid="0801"
 			uPr="RM520"
 		fi
 		if [ "$device" = 1001  -o "$device" = 2001 ]; then
@@ -185,6 +223,7 @@ if [ -e $ROOTER/modem-led.sh ]; then
 	$ROOTER/modem-led.sh $CURRMODEM 1
 fi
 
+rm -f /tmp/usbwait
 rm -f /tmp/gotpcie1
 /usr/lib/rooter/mhi/create_mhi.sh $CURRMODEM
 
