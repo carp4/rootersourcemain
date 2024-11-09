@@ -226,6 +226,8 @@ if [ -e /usr/lib/gps/gps.sh ]; then
 	/usr/lib/gps/gps.sh $CURRMODEM &
 fi
 
+$ROOTER/sms/check_sms.sh $CURRMODEM &
+
 INTER=$(uci get modem.modeminfo$CURRMODEM.inter)
 if [ -z $INTER ]; then
 	INTER=$CURRMODEM
@@ -268,7 +270,7 @@ fi
 DEVICE="/dev/wwan0mbim0"
 IFNAME="mhi_hwip0"
 APN=$NAPN
-
+log "Using APN : $APN"
 #
 # stop network
 # setup data format
