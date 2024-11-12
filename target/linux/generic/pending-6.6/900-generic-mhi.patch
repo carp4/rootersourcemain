@@ -58,3 +58,25 @@
  	{ PCI_DEVICE(PCI_VENDOR_ID_QCOM, 0x0308),
  		.driver_data = (kernel_ulong_t) &mhi_qcom_sdx65_info },
  	{ PCI_DEVICE(PCI_VENDOR_ID_QCOM, 0x0309),
+@@ -639,6 +650,8 @@
+ 	/* T99W175 (sdx55), Both for eSIM and Non-eSIM */
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_FOXCONN, 0xe0ab),
+ 		.driver_data = (kernel_ulong_t) &mhi_foxconn_sdx55_info },
++	{ PCI_DEVICE(PCI_VENDOR_ID_FOXCONN, 0xe0af),
++		.driver_data = (kernel_ulong_t) &mhi_foxconn_sdx55_info },
+ 	/* DW5930e (sdx55), With eSIM, It's also T99W175 */
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_FOXCONN, 0xe0b0),
+ 		.driver_data = (kernel_ulong_t) &mhi_foxconn_sdx55_info },
+@@ -891,8 +904,10 @@
+ 	err = mhi_prepare_for_power_up(mhi_cntrl);
+ 	if (err)
+ 		goto err_try_reset;
+-
+-	err = mhi_sync_power_up(mhi_cntrl);
++/* Power fix 
++ change sync to async
++*/
++	err = mhi_async_power_up(mhi_cntrl);
+ 	if (err)
+ 		goto err_unprepare;
+ 
