@@ -175,10 +175,10 @@ case "$vendor" in
 		fi
 	;;
 	"$PCI_VENDOR_ID_FOXCONN" )
-		if [ "$device" = e0ab  -o "$device" = e0b0 -o "$device" = e0b1 -o "$device" = e0bf -o "$device" = e0c3 ]; then
+		if [ "$device" = e0ab  -o "$device" = e0b0 -o "$device" = e0b1 -o "$device" = e0bf -o "$device" = e0c3  -o "$device" = e0af ]; then
 			uVid="413c"
 			uMa="Foxconn"
-			uPid="81d8"
+			uPid="81df"
 			uPr="T99W175"
 		else
 			log "Foxconn not supported"
