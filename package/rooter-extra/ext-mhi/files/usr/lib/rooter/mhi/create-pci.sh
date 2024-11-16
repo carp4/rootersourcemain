@@ -77,11 +77,11 @@ while IFS= read -r line; do
 	fi
 done < /tmp/mhipci
 
-echo "1" > /sys/bus/pci/devices/$pcinum/remove
-log "PCi Remove"
-sleep 20
-echo "1" > /sys/bus/pci/rescan
-log "Rescan"
+#echo "1" > /sys/bus/pci/devices/$pcinum/remove
+#log "PCi Remove"
+#sleep 20
+#echo "1" > /sys/bus/pci/rescan
+#log "Rescan"
 
 MODCNT=2
 COUNTER=1
@@ -96,7 +96,7 @@ while [ $COUNTER -le $MODCNT ]; do
 done
 
 source /tmp/variable.file
-CURRMODEM=$MODSTART
+CURRMODEM=1
 uci set modem.modem$CURRMODEM.empty=0
 uci commit modem
 echo "$retresult" > /tmp/gotpcie1

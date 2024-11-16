@@ -78,6 +78,95 @@ get_connect() {
 	uci commit modem
 }
 
+foxunlock() {
+	FIRMWARE_VERSION=$(qmicli --device-open-proxy --device="$DEVICE" \
+	  --dms-foxconn-get-firmware-version=firmware-mcfg \
+	  | grep "Version:" \
+	  | grep -o "'.*'" \
+	  | sed "s/'//g" \
+	  | sed -e 's/\.[^.]*\.[^.]*$//')
+	if [ -n "${FIRMWARE_VERSION}" ]; then
+		FIRMWARE_APPS_VERSION=$(qmicli --device-open-proxy --device="$DEVICE" \
+		--dms-foxconn-get-firmware-version=apps \
+		| grep "Version:" \
+		| grep -o "'.*'" \
+		| sed "s/'//g")
+
+		if [ -n "${FIRMWARE_APPS_VERSION}" ]; then
+			IMEI=$(qmicli --device-open-proxy --device="$DEVICE" --dms-get-ids \
+			| grep "IMEI:" \
+			| grep -o "'.*'" \
+			| sed "s/'//g")
+
+			if [ -n "${IMEI}" ]; then
+			  SALT="salt" # use a static salt for now
+			  MAGIC="foxc"
+			  HASH="${SALT}$(printf "%s%s%s%s%s" "${FIRMWARE_VERSION}" \
+				"${FIRMWARE_APPS_VERSION}" "${IMEI}" "${SALT}" "${MAGIC}" \
+				| md5sum \
+				| head -c 32)"
+			else
+			  log "Could not determine SDX55 IMEI"
+			fi
+		else
+			log "Could not determine SDX55 firmware apps version"
+		fi
+	else
+		log "Could not determine SDX55 firmware version"
+	fi
+	UNLOCK_RESULT=1
+	if [ -n "${HASH}" ]; then
+	  qmicli --device-open-proxy --device="$DEVICE" \
+		--dms-foxconn-set-fcc-authentication-v2="${HASH},48"
+	  UNLOCK_RESULT=$?
+
+	  if [ $UNLOCK_RESULT -ne 0 ]; then
+		log "SDX55 FCC unlock v2 failed"
+	  fi
+	fi
+
+	if [ $UNLOCK_RESULT -ne 0 ]; then
+	  qmicli --device-open-proxy --device="$DEVICE" \
+		--dms-foxconn-set-fcc-authentication=0
+	  UNLOCK_RESULT=$?
+
+	  if [ $UNLOCK_RESULT -ne 0 ]; then
+		log "SDX55 FCC unlock v1 failed"
+	  fi
+	fi
+	log "Unlock : $UNLOCK_RESULT"
+}
+
+fcc_unlock() {
+	VENDOR_ID_HASH="3df8c719"
+	ATCMDD="at+gtfcclockgen"
+	OX=$($ROOTER/gcom/gcom-locked "/dev/ttyUSB$CPORT" "run-at.gcom" "$CURRMODEM" "$ATCMDD")
+	CHALLENGE=$(echo "$OX" | grep -o '0x[0-9a-fA-F]\+' | awk '{print $1}')
+	 if [ -n "$CHALLENGE" ]; then
+        log "Got challenge from modem: $CHALLENGE"
+        HEX_CHALLENGE=$(printf "%08x" "$CHALLENGE")
+        COMBINED_CHALLENGE="${HEX_CHALLENGE}$(printf "%.8s" "${VENDOR_ID_HASH}")"
+        RESPONSE_HASH=$(echo "$COMBINED_CHALLENGE" | xxd -r -p | sha256sum | cut -d ' ' -f 1)
+        TRUNCATED_RESPONSE=$(printf "%.8s" "$RESPONSE_HASH")
+        RESPONSE=$(printf "%d" "0x$TRUNCATED_RESPONSE")
+
+        log "Sending response to modem: $RESPONSE"
+        #UNLOCK_RESPONSE=$(at_command "at+gtfcclockver=$RESPONSE")
+		ATCMDD="at+gtfcclockver=$RESPONSE"
+		UNLOCK_RESPONSE=$($ROOTER/gcom/gcom-locked "/dev/ttyUSB$CPORT" "run-at.gcom" "$CURRMODEM" "$ATCMDD")
+		succ=$(echo "$UNLOCK_RESPONSE" | grep "+GTFCCLOCKVER: 1")
+        if [ ! -z "$succ" ]; then
+			log "FCC unlock succeeded"
+            return
+         else
+            log "Unlock failed. Got response: $UNLOCK_RESPONSE"
+        fi
+    else
+        log "Failed to obtain FCC challenge. Got: ${RAW_CHALLENGE}"
+    fi
+
+}
+
 CURRMODEM=$1
 source /tmp/variable.file
 log "Start MHI"
@@ -204,7 +293,12 @@ if [ "$idV" = "1199" ]; then
 	$ROOTER/connect/bandmask $CURRMODEM 0
 fi
 if [ "$idV" = "413c" ]; then
+	foxunlock
 	$ROOTER/connect/bandmask $CURRMODEM 3
+fi
+if [ "$idV" = "0e8d" ]; then
+	fcc_unlock
+	$ROOTER/connect/bandmask $CURRMODEM 2
 fi
 
 $ROOTER/common/gettype.sh $CURRMODEM
@@ -268,7 +362,11 @@ if [ -e $ROOTER/modem-led.sh ]; then
 fi
 
 DEVICE="/dev/wwan0mbim0"
-IFNAME="mhi_hwip0"
+if [ "$idV" = "0e8d" ]; then
+	IFNAME="wwan0"
+else
+	IFNAME="mhi_hwip0"
+fi
 APN=$NAPN
 log "Using APN : $APN"
 #
@@ -283,7 +381,6 @@ DEVICE_DATA_FORMAT_OUT=`$DEVICE_DATA_FORMAT_CMD`
 log "$DEVICE_DATA_FORMAT_OUT"
 DEVICE_LLP=`echo "$DEVICE_DATA_FORMAT_OUT" | sed -n "s/.*Link layer protocol:.*'\(.*\)'.*/\1/p"`
 SETFORM=`qmicli -p -d $DEVICE --wda-set-data-format="raw-ip" 2>/dev/null`
-
  
 #
 # start network
