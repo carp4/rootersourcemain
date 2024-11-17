@@ -74,6 +74,17 @@ while IFS= read -r line; do
 			fi
 			break			
 		fi
+		mhi=$(echo "$line" | grep "mtk_t7xx")
+		if [ ! -z "$mhi" ]; then
+			dev=$(echo "$dev" | tr " " "," | cut -d, -f1)
+			size=${#dev}
+			if [ "$size" -eq 7 ]; then
+				pcinum="0000:$dev"
+			else
+				pcinum="$dev"
+			fi
+			break			
+		fi
 	fi
 done < /tmp/mhipci
 
@@ -123,6 +134,7 @@ PCI_VENDOR_ID_QCOM="17cb"
 PCI_VENDOR_ID_QUECTEL="1eac"
 PCI_VENDOR_ID_FOXCONN="105b"
 PCI_VENDOR_ID_THALES="1269"
+PCI_VENDOR_ID_FIB="14c3"
 
 case "$vendor" in
 	"$PCI_VENDOR_ID_QCOM" )
@@ -188,6 +200,12 @@ case "$vendor" in
 	"$PCI_VENDOR_ID_THALES" )
 		log "Thales not supported"
 		exit 0
+	;;
+	"$PCI_VENDOR_ID_FIB" )
+		uVid="0e8d"
+		uMa="Fibocom"
+		uPid="7127"
+		uPr="FM350"
 	;;
 	
 esac
