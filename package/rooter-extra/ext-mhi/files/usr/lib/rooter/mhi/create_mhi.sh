@@ -167,6 +167,28 @@ fcc_unlock() {
 
 }
 
+get_connect() {
+	NAPN=$(uci -q get modem.modeminfo$CURRMODEM.apn)
+	NAPN2=$(uci -q get modem.modeminfo$CURRMODEM.apn2)
+	NAPN3=$(uci -q get modem.modeminfo$CURRMODEM.apn3)
+	NUSER=$(uci -q get modem.modeminfo$CURRMODEM.user)
+	NPASS=$(uci -q get modem.modeminfo$CURRMODEM.passw)
+	NAUTH=$(uci -q get modem.modeminfo$CURRMODEM.auth)
+	PDPT=$(uci -q get modem.modeminfo$CURRMODEM.pdptype)
+	NAUTH=0
+	NUSER=NIL
+	NPASS=NIL
+	CID=1
+	uci set modem.modem$CURRMODEM.apn="$NAPN"
+	uci set modem.modem$CURRMODEM.apn2=$NAPN2
+	uci set modem.modem$CURRMODEM.apn3=$NAPN3
+	uci set modem.modem$CURRMODEM.user=$NUSER
+	uci set modem.modem$CURRMODEM.passw=$NPASS
+	uci set modem.modem$CURRMODEM.auth=$NAUTH
+	uci set modem.modem$CURRMODEM.pin=$PINC
+	uci commit modem
+}
+
 CURRMODEM=$1
 source /tmp/variable.file
 log "Start MHI"
@@ -369,6 +391,59 @@ else
 fi
 APN=$NAPN
 log "Using APN : $APN"
+if [ 1 = 0 ]; then
+	echo "APN=$APN" > /etc/mbim-network.conf
+	echo "APN_USER=" >> /etc/mbim-network.conf
+	echo "APN_PASS=" >> /etc/mbim-network.conf
+	echo "APN_AUTH=" >> /etc/mbim-network.conf
+	echo "PROXY=yes" >> /etc/mbim-network.conf
+
+	/usr/lib/rooter/mhi/createnetwork $DEVICE start
+
+	exit 0
+fi	
+if [ 1 = 0 ]; then
+	get_connect
+	pdptype="ipv4v6"
+	IPVAR=$(uci -q get modem.modeminfo$CURRMODEM.pdptype)
+	case "$IPVAR" in
+		"IP" )
+			pdptype="ipv4"
+		;;
+		"IPV6" )
+			pdptype="ipv6"
+		;;
+		"IPV4V6" )
+			pdptype="ipv4v6"
+		;;
+	esac
+	isplist=$apndata"000000,$NAPN,Default,$NPASS,$CID,$NUSER,$NAUTH,$pdptype"
+	if [ ! -z "$NAPN2" ]; then
+		isplist=$isplist" 000000,$NAPN2,Default,$NPASS,$CID,$NUSER,$NAUTH,$pdptype"
+	fi
+	if [ ! -z "$NAPN3" ]; then
+		isplist=$isplist" 000000,$NAPN3,Default,$NPASS,$CID,$NUSER,$NAUTH,$pdptype"
+	fi
+	log "$isplist"
+	uci set modem.modeminfo$CURRMODEM.isplist="$isplist"
+	uci commit modem		
+
+	log "Using Netifd Method"
+	uci delete network.wan$INTER
+	uci set network.wan$INTER=interface
+	uci set network.wan$INTER.proto=mbim
+	uci set network.wan$INTER.device=$DEVICE
+	uci set network.wan$INTER.metric=$INTER"0"
+	uci set network.wan$INTER.currmodem=$CURRMODEM
+	uci -q commit network
+	rm -f /tmp/usbwait
+	ifup wan$INTER
+	MIFACE=$(uci -q get modem.modem$CURRMODEM.interface)
+	if [ -e /sys/class/net/$MIFACE/cdc_ncm/tx_timer_usecs ]; then
+		echo "0" > /sys/class/net/$MIFACE/cdc_ncm/tx_timer_usecs
+	fi
+	exit 0
+fi
 #
 # stop network
 # setup data format
