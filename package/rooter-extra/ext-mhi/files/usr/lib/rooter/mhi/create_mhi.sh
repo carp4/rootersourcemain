@@ -428,6 +428,9 @@ uci set modem.modem$CURRMODEM.netinterface=$IFNAME
 uci commit modem
 
 CID=$(uci -q get modem.modeminfo$CURRMODEM.context)
+if [ -z "$CID" ]; then
+	CID="1"
+fi
 pdptype="IPV4V6"
 IPVAR=$(uci -q get modem.modeminfo$CURRMODEM.pdptype)
 if [ -z "$IPVAR" ]; then
