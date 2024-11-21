@@ -31,4 +31,6 @@ start_service()
 {
 	config_load firewall
 	config_foreach do_zone zone
+	uci delete network.xlatd1
+	uci commit network
 }

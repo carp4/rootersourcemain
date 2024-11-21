@@ -53,6 +53,8 @@ fi
 
 log "Connecting a MHI Modem"
 
+uci delete network.xlatd1
+uci commit network
 
 lspci -k > /tmp/mhipci
 while IFS= read -r line; do
@@ -111,7 +113,6 @@ CURRMODEM=1
 uci set modem.modem$CURRMODEM.empty=0
 uci commit modem
 echo "$retresult" > /tmp/gotpcie1
-log " CURRMODEM $retresult"
 
 MODSTART=`expr $MODSTART + 1`
 save_variables

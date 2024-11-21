@@ -4,13 +4,65 @@ ROOTER=/usr/lib/rooter
 ROOTER_LINK="/tmp/links"
  
 log() {
-	modlog "Create Connection $CURRMODEM" "$@"
+	modlog "Create MHI Connection $CURRMODEM" "$@"
 }
 
 ifname1="ifname"
 if [ -e /etc/newstyle ]; then
 	ifname1="device"
 fi
+
+check_apn() {
+	IPVAR="IP"
+	local COMMPORT="/dev/ttyUSB"$CPORT
+	if [ -e /etc/nocops ]; then
+		echo "0" > /tmp/block
+	fi
+	ATCMDD="AT+CGDCONT=?"
+	OX=$($ROOTER/gcom/gcom-locked "$COMMPORT" "run-at.gcom" "$CURRMODEM" "$ATCMDD")
+	[ "$PDPT" = "0" ] && PDPT=""
+	for PDP in "$PDPT" IPV4V6; do
+		if [[ "$(echo $OX | grep -o "$PDP")" ]]; then
+			IPVAR="$PDP"
+			break
+		fi
+	done
+
+	uci set modem.modem$CURRMODEM.pdptype=$IPVAR
+	uci commit modem
+
+	log "PDP Type selected in the Connection Profile: \"$PDPT\", active: \"$IPVAR\""
+
+	if [ "$idV" = "12d1" ]; then
+		CFUNOFF="0"
+	else
+		CFUNOFF="4"
+	fi
+
+	ATCMDD="AT+CGDCONT?;+CFUN?"
+	OX=$($ROOTER/gcom/gcom-locked "$COMMPORT" "run-at.gcom" "$CURRMODEM" "$ATCMDD")
+	CGDCONT2=$(echo $OX | grep "+CGDCONT: 2,")
+	CGDCONT0=$(echo $OX | grep "+CGDCONT: 0,")
+	if [ -z "$CGDCONT2" ]; then
+		ATCMDD="AT+CGDCONT=2,\"$IPVAR\",\"ims\""
+		OX=$($ROOTER/gcom/gcom-locked "$COMMPORT" "run-at.gcom" "$CURRMODEM" "$ATCMDD")
+	fi
+	if `echo $OX | grep "+CGDCONT: $CID,\"$IPVAR\",\"$NAPN\"," 1>/dev/null 2>&1`
+	then
+		if [ -z "$(echo $OX | grep -o "+CFUN: 1")" ]; then
+			OX=$($ROOTER/gcom/gcom-locked "$COMMPORT" "run-at.gcom" "$CURRMODEM" "AT+CFUN=1")
+		fi
+	else
+		ATCMDD="AT+CGDCONT=$CID,\"$IPVAR\",\"$NAPN\""
+		OX=$($ROOTER/gcom/gcom-locked "$COMMPORT" "run-at.gcom" "$CURRMODEM" "$ATCMDD")
+		OX=$($ROOTER/gcom/gcom-locked "$COMMPORT" "run-at.gcom" "$CURRMODEM" "AT+CFUN=$CFUNOFF")
+		OX=$($ROOTER/gcom/gcom-locked "$COMMPORT" "run-at.gcom" "$CURRMODEM" "AT+CFUN=1")
+		sleep 5
+	fi
+	if [ -e /etc/nocops ]; then
+		rm -f /tmp/block
+	fi
+}
 
 set_dns() {
 	local pDNS1=$(uci -q get modem.modeminfo$CURRMODEM.dns1)
@@ -63,21 +115,6 @@ save_variables() {
 	echo 'BASEPORT="'"$BASEPORT"'"' >> /tmp/variable.file
 }
 
-get_connect() {
-	NAPN=$(uci get modem.modeminfo$CURRMODEM.apn)
-	NUSER=$(uci get modem.modeminfo$CURRMODEM.user)
-	NPASS=$(uci get modem.modeminfo$CURRMODEM.passw)
-	NAUTH=$(uci get modem.modeminfo$CURRMODEM.auth)
-	PINC=$(uci get modem.modeminfo$CURRMODEM.pincode)
-
-	uci set modem.modem$CURRMODEM.apn=$NAPN
-	uci set modem.modem$CURRMODEM.user=$NUSER
-	uci set modem.modem$CURRMODEM.pass=$NPASS
-	uci set modem.modem$CURRMODEM.auth=$NAUTH
-	uci set modem.modem$CURRMODEM.pin=$PINC
-	uci commit modem
-}
-
 foxunlock() {
 	FIRMWARE_VERSION=$(qmicli --device-open-proxy --device="$DEVICE" \
 	  --dms-foxconn-get-firmware-version=firmware-mcfg \
@@ -86,6 +123,7 @@ foxunlock() {
 	  | sed "s/'//g" \
 	  | sed -e 's/\.[^.]*\.[^.]*$//')
 	if [ -n "${FIRMWARE_VERSION}" ]; then
+		log "${FIRMWARE_VERSION}"
 		FIRMWARE_APPS_VERSION=$(qmicli --device-open-proxy --device="$DEVICE" \
 		--dms-foxconn-get-firmware-version=apps \
 		| grep "Version:" \
@@ -93,12 +131,14 @@ foxunlock() {
 		| sed "s/'//g")
 
 		if [ -n "${FIRMWARE_APPS_VERSION}" ]; then
+			log "${FIRMWARE_APPS_VERSION}"
 			IMEI=$(qmicli --device-open-proxy --device="$DEVICE" --dms-get-ids \
 			| grep "IMEI:" \
 			| grep -o "'.*'" \
 			| sed "s/'//g")
 
 			if [ -n "${IMEI}" ]; then
+				log "${IMEI}"
 			  SALT="salt" # use a static salt for now
 			  MAGIC="foxc"
 			  HASH="${SALT}$(printf "%s%s%s%s%s" "${FIRMWARE_VERSION}" \
@@ -175,10 +215,6 @@ get_connect() {
 	NPASS=$(uci -q get modem.modeminfo$CURRMODEM.passw)
 	NAUTH=$(uci -q get modem.modeminfo$CURRMODEM.auth)
 	PDPT=$(uci -q get modem.modeminfo$CURRMODEM.pdptype)
-	NAUTH=0
-	NUSER=NIL
-	NPASS=NIL
-	CID=1
 	uci set modem.modem$CURRMODEM.apn="$NAPN"
 	uci set modem.modem$CURRMODEM.apn2=$NAPN2
 	uci set modem.modem$CURRMODEM.apn3=$NAPN3
@@ -315,7 +351,6 @@ if [ "$idV" = "1199" ]; then
 	$ROOTER/connect/bandmask $CURRMODEM 0
 fi
 if [ "$idV" = "413c" ]; then
-	foxunlock
 	$ROOTER/connect/bandmask $CURRMODEM 3
 fi
 if [ "$idV" = "0e8d" ]; then
@@ -389,8 +424,25 @@ if [ "$idV" = "0e8d" ]; then
 else
 	IFNAME="mhi_hwip0"
 fi
+uci set modem.modem$CURRMODEM.netinterface=$IFNAME
+uci commit modem
+
+CID=$(uci -q get modem.modeminfo$CURRMODEM.context)
+pdptype="IPV4V6"
+IPVAR=$(uci -q get modem.modeminfo$CURRMODEM.pdptype)
+if [ -z "$IPVAR" ]; then
+	IPVAR="IPV4V6"
+fi
+log "PDP Context : $CID  PDP Type : $IPVAR"
+ATCMDD="AT+CGDCONT=$CID,\"$IPVAR\",\"$NAPN\""
+OX=$($ROOTER/gcom/gcom-locked "/dev/ttyUSB$CPORT" "run-at.gcom" "$CURRMODEM" "$ATCMDD")
+OX=$($ROOTER/gcom/gcom-locked "/dev/ttyUSB$CPORT" "run-at.gcom" "$CURRMODEM" "AT+CFUN=$CFUNOFF")
+OX=$($ROOTER/gcom/gcom-locked "/dev/ttyUSB$CPORT" "run-at.gcom" "$CURRMODEM" "AT+CFUN=1")
+sleep 5
+check_apn
+	
 APN=$NAPN
-log "Using APN : $APN"
+log "Using APN : $APN  on $IFNAME"
 if [ 1 = 0 ]; then
 	echo "APN=$APN" > /etc/mbim-network.conf
 	echo "APN_USER=" >> /etc/mbim-network.conf
@@ -403,7 +455,6 @@ if [ 1 = 0 ]; then
 	exit 0
 fi	
 if [ 1 = 0 ]; then
-	get_connect
 	pdptype="ipv4v6"
 	IPVAR=$(uci -q get modem.modeminfo$CURRMODEM.pdptype)
 	case "$IPVAR" in
@@ -444,6 +495,8 @@ if [ 1 = 0 ]; then
 	fi
 	exit 0
 fi
+
+
 #
 # stop network
 # setup data format
@@ -456,7 +509,11 @@ DEVICE_DATA_FORMAT_OUT=`$DEVICE_DATA_FORMAT_CMD`
 log "$DEVICE_DATA_FORMAT_OUT"
 DEVICE_LLP=`echo "$DEVICE_DATA_FORMAT_OUT" | sed -n "s/.*Link layer protocol:.*'\(.*\)'.*/\1/p"`
 SETFORM=`qmicli -p -d $DEVICE --wda-set-data-format="raw-ip" 2>/dev/null`
- 
+
+if [ "$idV" = "413c" ]; then
+	foxunlock
+fi
+
 #
 # start network
 # check for failure
@@ -490,42 +547,87 @@ fi
 log "Network Connected"
 qmicli -p -d $DEVICE --wds-get-current-settings > /tmp/mhisettings
 while IFS= read -r line; do
+	read -r line
 	ipf=$(echo "$line" | grep "IP Family:")
 	if [ ! -z "$ipf" ]; then
 		ipfam=$(echo "$ipf" | xargs | tr " " "," | cut -d, -f3)
 		vs=$(echo "$ipfam" | grep "6")
 		if [ ! -z "$vs" ]; then
 			vs=6
+			res=$(cat /tmp/mhisettings)
+			log "$res"
+			read -r line
+			ipaddr6=$(echo "$line" | grep "$ipfam address:")
+			if [ ! -z "$ipaddr6" ]; then
+				ipaddrf6=$(echo "$ipaddr6" | xargs | tr " " "," | cut -d, -f3)
+			fi
+			read -r line
+			gateway6=$(echo "$line" | grep "gateway address:")
+			if [ ! -z "$gateway6" ]; then
+				gatewayf6=$(echo "$gateway6" | xargs | tr " " "," | cut -d, -f4 | tr "/" "," | cut -d, -f1)
+			fi
+			read -r line
+			dns16=$(echo "$line" | grep "primary DNS:")
+			if [ ! -z "$dns16" ]; then
+				dns1f6=$(echo "$dns16" | xargs | tr " " "," | cut -d, -f4)
+			fi
+			read -r line
+			dns26=$(echo "$line" | grep "secondary DNS:")
+			if [ ! -z "$dns26" ]; then
+				dns2f6=$(echo "$dns26" | xargs | tr " " "," | cut -d, -f4)
+			fi
+			read -r line
+			read -r line
+			log "IP Addr6 : $ipaddrf6"
+			log "Gateway6 : $gatewayf6"
+			log "DNS6 : $dns1f6 $dns2f6"
 		else
-			vs=4
+			vs=$(echo "$ipfam" | grep "4")
+			if [ ! -z "$vs" ]; then
+				res=$(cat /tmp/mhisettings)
+				log "$res"
+				vs=4
+				read -r line
+				ipaddr4=$(echo "$line" | grep "$ipfam address:")
+				if [ ! -z "$ipaddr4" ]; then
+					ipaddrf4=$(echo "$ipaddr4" | xargs | tr " " "," | cut -d, -f3)
+				fi
+				read -r line
+				subnet4=$(echo "$line" | grep "subnet mask:")
+				if [ ! -z "$subnet4" ]; then
+					subnetf4=$(echo "$subnet4" | xargs | tr " " "," | cut -d, -f4 | tr "/" "," | cut -d, -f1)
+				fi
+				read -r line
+				gateway4=$(echo "$line" | grep "gateway address:")
+				if [ ! -z "$gateway4" ]; then
+					gatewayf4=$(echo "$gateway4" | xargs | tr " " "," | cut -d, -f4 | tr "/" "," | cut -d, -f1)
+				fi
+				read -r line
+				dns14=$(echo "$line" | grep "primary DNS:")
+				if [ ! -z "$dns14" ]; then
+					dns1f4=$(echo "$dns14" | xargs | tr " " "," | cut -d, -f4)
+				fi
+				read -r line
+				dns24=$(echo "$line" | grep "secondary DNS:")
+				if [ ! -z "$dns24" ]; then
+					dns2f4=$(echo "$dns24" | xargs | tr " " "," | cut -d, -f4)
+				fi
+				read -r line
+				read -r line
+				log "IP Addr4 : $ipaddrf4"
+				log "Subnet4 : $subnetf4"
+				log "Gateway4 : $gatewayf4"
+				log "DNS4 : $dns1f4 $dns2f4"
+			fi
 		fi
-	fi
-	ipaddr=$(echo "$line" | grep "$ipfam address:")
-	if [ ! -z "$ipaddr" ]; then
-		ipaddrf=$(echo "$ipaddr" | xargs | tr " " "," | cut -d, -f3)
-	fi
-	gateway=$(echo "$line" | grep "gateway address:")
-	if [ ! -z "$gateway" ]; then
-		gatewayf=$(echo "$gateway" | xargs | tr " " "," | cut -d, -f4 | tr "/" "," | cut -d, -f1)
-	fi
-	dns1=$(echo "$line" | grep "primary DNS:")
-	if [ ! -z "$dns1" ]; then
-		dns1f=$(echo "$dns1" | xargs | tr " " "," | cut -d, -f4)
-	fi
-	dns2=$(echo "$line" | grep "secondary DNS:")
-	if [ ! -z "$dns2" ]; then
-		dns2f=$(echo "$dns2" | xargs | tr " " "," | cut -d, -f4)
 	fi
 done < /tmp/mhisettings
 
-log "IP Addr : $ipaddrf"
-log "Gateway : $gatewayf"
-log "DNS : $dns1f $dns2f"
 
 INTER=1
 log "Applying IP settings to wan$INTER"
 
-if [ "$vs" = "6" ]; then
+if [ -z "$ipaddrf4" ]; then
 	log "Add 464xlat interface"
 	uci delete network.xlatd$INTER
 	uci set network.xlatd$INTER=interface
@@ -544,16 +646,22 @@ uci set network.wan$INTER=interface
 uci set network.wan$INTER.proto=static
 uci set network.wan$INTER.device="$IFNAME"
 uci set network.wan$INTER.metric=$INTER"0"
-uci add_list network.wan$INTER.dns="$dns1f"
-if [ ! -z "$dns2f" ]; then
-	uci add_list network.wan$INTER.dns="$dns2f"
+if [ ! -z "$ipaddrf4" ]; then
+	uci set network.wan$INTER.ipaddr="$ipaddrf4"
+	uci set network.wan$INTER.gateway="$gatewayf4"
+	uci add_list network.wan$INTER.dns="$dns1f4"
+	if [ ! -z "$dns2f4" ]; then
+		uci add_list network.wan$INTER.dns="$dns2f4"
+	fi
+	uci set network.wan$INTER.netmask="$subnetf4"
 fi
-if [ "$vs" = "6" ]; then
-	uci set network.wan$INTER.ip6gw="$gatewayf"
-	uci set network.wan$INTER.ip6addr="$ipaddrf"
-else
-	uci set network.wan$INTER.ipaddr="$ipaddrf"
-	uci set network.wan$INTER.gateway="$gatewayf"
+if [ ! -z "$ipaddrf6" ]; then
+	uci set network.wan$INTER.ip6addr="$ipaddrf6"
+	uci set network.wan$INTER.ip6gw="$gatewayf6"
+	uci add_list network.wan$INTER.dns="$dns1f6"
+	if [ ! -z "$dns2f6" ]; then
+		uci add_list network.wan$INTER.dns="$dns2f6"
+	fi
 fi
 uci commit network
 ip link set dev $IFNAME arp off
@@ -576,3 +684,4 @@ uci commit modem
 if [ -e $ROOTER/connect/postconnect.sh ]; then
 	$ROOTER/connect/postconnect.sh $CURRMODEM
 fi
+                

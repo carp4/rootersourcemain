@@ -15,7 +15,7 @@ define Package/ext-mhi
   CATEGORY:=ROOter
   SUBMENU:=Optional Applications
   DEPENDS:=+kmod-mhi-bus +kmod-mhi-net +kmod-mhi-pci-generic +kmod-mhi-wwan-ctrl \
-		+kmod-mhi-wwan-mbim +kmod-qrtr-mhi +qmi-utils +pciutils +kmod-mtk-t7xx
+		+kmod-mhi-wwan-mbim +qmi-utils +pciutils +kmod-mtk-t7xx +mbim-utils
   TITLE:=support for MHI
   PKGARCH:=all
 endef
