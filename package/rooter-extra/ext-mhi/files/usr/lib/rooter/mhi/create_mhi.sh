@@ -27,6 +27,9 @@ check_apn() {
 			break
 		fi
 	done
+	if [ "$idV" = "0e8d" ]; then
+		IPVAR="IP"
+	fi
 
 	uci set modem.modem$CURRMODEM.pdptype=$IPVAR
 	uci commit modem
@@ -436,6 +439,9 @@ IPVAR=$(uci -q get modem.modeminfo$CURRMODEM.pdptype)
 if [ -z "$IPVAR" ]; then
 	IPVAR="IPV4V6"
 fi
+if [ "$idV" = "0e8d" ]; then
+	IPVAR="IP"
+fi
 log "PDP Context : $CID  PDP Type : $IPVAR"
 ATCMDD="AT+CGDCONT=$CID,\"$IPVAR\",\"$NAPN\""
 OX=$($ROOTER/gcom/gcom-locked "/dev/ttyUSB$CPORT" "run-at.gcom" "$CURRMODEM" "$ATCMDD")
@@ -472,6 +478,7 @@ if [ "$idV" = "0e8d" ]; then
 			pdptype="ipv4v6"
 		;;
 	esac
+	pdptype="ipv4"
 	isplist=$apndata"000000,$NAPN,Default,$NPASS,$CID,$NUSER,$NAUTH,$pdptype"
 	if [ ! -z "$NAPN2" ]; then
 		isplist=$isplist" 000000,$NAPN2,Default,$NPASS,$CID,$NUSER,$NAUTH,$pdptype"
