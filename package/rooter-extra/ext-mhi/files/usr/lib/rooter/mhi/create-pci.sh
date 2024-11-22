@@ -59,6 +59,9 @@ uci commit network
 lspci -k > /tmp/mhipci
 while IFS= read -r line; do
 	dev=$(echo "$line" | grep "Device")
+	if [ -z "$dev" ]; then
+		dev=$(echo "$line" | grep "SDX55")
+	fi
 	if [ ! -z "$dev" ]; then
 		read -r line
 		kd=$(echo "$line" | grep "Kernel driver")
@@ -90,12 +93,12 @@ while IFS= read -r line; do
 	fi
 done < /tmp/mhipci
 
-echo "1" > /sys/bus/pci/devices/$pcinum/remove
-log "PCi Remove"
-sleep 20
-echo "1" > /sys/bus/pci/rescan
-log "Rescan"
-
+#echo "1" > /sys/bus/pci/devices/$pcinum/remove
+#log "PCi Remove"
+#sleep 25
+#echo "1" > /sys/bus/pci/rescan
+#log "Rescan"
+#sleep 5
 MODCNT=2
 COUNTER=1
 retresult=0
@@ -129,7 +132,7 @@ subdevice=$(cat /sys/bus/pci/devices/$pcinum/subsystem_device)
 subdevice=${subdevice:2}
 
 display_top; display "Modem Vendor and Device ID"
-display "ID=$vendor $device Sub $subvendor $subdevice"; display_bottom
+display "ID=$pcinum : $vendor $device Sub $subvendor $subdevice"; display_bottom
 
 PCI_VENDOR_ID_QCOM="17cb"
 PCI_VENDOR_ID_QUECTEL="1eac"
@@ -163,6 +166,31 @@ case "$vendor" in
 				else
 					log "Modem not supported"
 					exit 0
+				fi
+			else
+				if [ "$device" = 0306 ]; then
+					if [ "$subvendor" = 17cb -a "$subdevice" = 010c ]; then
+						uVid="2c7c"
+						uMa="Quectel"
+						uPid="0800"
+						uPr="RM500"
+						# subvendor - 17cb  subdevice - 0309
+					else
+						log "Modem not supported"
+						exit 0
+					fi
+				else
+					if [ "$device" = 0304 ]; then
+						if [ "$subvendor" = 17cb -a "$subdevice" = 0307 ]; then
+							uVid="2c7c"
+							uMa="Quectel"
+							uPid="0620"
+							uPr="EM160/120"
+						else
+							log "Modem not supported"
+							exit 0
+						fi
+					fi
 				fi
 			fi
 		fi

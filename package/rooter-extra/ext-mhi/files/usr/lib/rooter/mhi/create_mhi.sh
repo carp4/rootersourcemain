@@ -439,6 +439,7 @@ fi
 log "PDP Context : $CID  PDP Type : $IPVAR"
 ATCMDD="AT+CGDCONT=$CID,\"$IPVAR\",\"$NAPN\""
 OX=$($ROOTER/gcom/gcom-locked "/dev/ttyUSB$CPORT" "run-at.gcom" "$CURRMODEM" "$ATCMDD")
+log "$OX" 
 OX=$($ROOTER/gcom/gcom-locked "/dev/ttyUSB$CPORT" "run-at.gcom" "$CURRMODEM" "AT+CFUN=$CFUNOFF")
 OX=$($ROOTER/gcom/gcom-locked "/dev/ttyUSB$CPORT" "run-at.gcom" "$CURRMODEM" "AT+CFUN=1")
 sleep 5
@@ -457,8 +458,8 @@ if [ 1 = 0 ]; then
 
 	exit 0
 fi	
-if [ 1 = 0 ]; then
-	pdptype="ipv4v6"
+if [ "$idV" = "0e8d" ]; then
+	pdptype="ipv4"
 	IPVAR=$(uci -q get modem.modeminfo$CURRMODEM.pdptype)
 	case "$IPVAR" in
 		"IP" )
@@ -687,4 +688,4 @@ uci commit modem
 if [ -e $ROOTER/connect/postconnect.sh ]; then
 	$ROOTER/connect/postconnect.sh $CURRMODEM
 fi
-                
+                                
