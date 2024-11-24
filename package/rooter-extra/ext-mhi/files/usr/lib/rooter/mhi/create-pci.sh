@@ -62,6 +62,9 @@ while IFS= read -r line; do
 	if [ -z "$dev" ]; then
 		dev=$(echo "$line" | grep "SDX55")
 	fi
+	if [ -z "$dev" ]; then
+		dev=$(echo "$line" | grep "SDX24")
+	fi
 	if [ ! -z "$dev" ]; then
 		read -r line
 		kd=$(echo "$line" | grep "Kernel driver")
