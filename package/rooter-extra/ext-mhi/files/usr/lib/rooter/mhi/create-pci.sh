@@ -56,7 +56,7 @@ log "Connecting a MHI Modem"
 uci delete network.xlatd1
 uci commit network
 
-lspci -k > /tmp/mhipci
+lspci -Dk > /tmp/mhipci
 while IFS= read -r line; do
 	dev=$(echo "$line" | grep "Device")
 	if [ -z "$dev" ]; then
