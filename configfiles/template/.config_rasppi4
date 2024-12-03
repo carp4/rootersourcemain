@@ -2473,6 +2473,7 @@ CONFIG_PACKAGE_kmod-libphy=y
 CONFIG_PACKAGE_kmod-mdio-devres=y
 # CONFIG_PACKAGE_kmod-mdio-gpio is not set
 # CONFIG_PACKAGE_kmod-mhi-net is not set
+# CONFIG_PACKAGE_kmod-mhi-pcie is not set
 # CONFIG_PACKAGE_kmod-mhi-wwan-ctrl is not set
 # CONFIG_PACKAGE_kmod-mhi-wwan-mbim is not set
 CONFIG_PACKAGE_kmod-mii=y
@@ -6171,6 +6172,7 @@ CONFIG_PACKAGE_uclient-fetch=y
 # CONFIG_PACKAGE_alix2d13 is not set
 # CONFIG_PACKAGE_axt1800 is not set
 # CONFIG_PACKAGE_b1300 is not set
+# CONFIG_PACKAGE_basic156 is not set
 # CONFIG_PACKAGE_d240 is not set
 # CONFIG_PACKAGE_dir860l is not set
 # CONFIG_PACKAGE_ext-omnia is not set
@@ -6186,6 +6188,7 @@ CONFIG_PACKAGE_fscheck=y
 # CONFIG_PACKAGE_vpnpolicy is not set
 # CONFIG_PACKAGE_we826 is not set
 # CONFIG_PACKAGE_we826q is not set
+# CONFIG_PACKAGE_wg156 is not set
 # CONFIG_PACKAGE_wg1602 is not set
 # CONFIG_PACKAGE_wg1608 is not set
 # CONFIG_PACKAGE_wg209 is not set
@@ -6233,12 +6236,21 @@ CONFIG_PACKAGE_luci-theme-material=y
 # CONFIG_PACKAGE_ext-huasifei is not set
 # CONFIG_PACKAGE_ext-huasifei16 is not set
 # CONFIG_PACKAGE_ext-linka is not set
+# CONFIG_PACKAGE_ext-nousb is not set
+# CONFIG_PACKAGE_ext-nousb16 is not set
+# CONFIG_PACKAGE_ext-nowifi is not set
+# CONFIG_PACKAGE_ext-nowifi16 is not set
+# CONFIG_PACKAGE_ext-nowifiusb is not set
+# CONFIG_PACKAGE_ext-nowifiusb16 is not set
+# CONFIG_PACKAGE_ext-rooter-bare is not set
 # CONFIG_PACKAGE_ext-rooter-lite is not set
+# CONFIG_PACKAGE_ext-rooter-rasppi is not set
 # CONFIG_PACKAGE_ext-rooter16 is not set
 # CONFIG_PACKAGE_ext-smart is not set
 # CONFIG_PACKAGE_ext-wifirepeat is not set
 # CONFIG_PACKAGE_ext-world is not set
 # CONFIG_PACKAGE_ext-world16 is not set
+# CONFIG_PACKAGE_ext-worlds is not set
 # end of ROOter
 
 #
