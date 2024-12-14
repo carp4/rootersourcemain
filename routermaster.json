@@ -352,5 +352,18 @@
 		"ext1": "-ext4.img",
 		"ext2": "-squashfs.img",
 		"addons": ["readme.pdf", "readmeSD.txt"]
+	},
+	"MIR3P": {
+		"details": "Xiaomi MIR3P",
+		"type": "2",
+		"build": "2203",
+		"config": ".config_mir3p",
+		"image1": "openwrt-ramips-mt7621-xiaomi_mi-router-3-pro-squashfs-factory.bin",
+		"image2": "openwrt-ramips-mt7621-xiaomi_mi-router-3-pro-squashfs-sysupgrade.bin",
+		"imagepath": "/ramips/mt7621/",
+		"mod": "Xiaomi-MIR3P",
+		"ext1": "-factory.bin",
+		"ext2": "-upgrade.bin",
+		"addons": ["readme.pdf", "readmerecovery.txt"]
 	}
 }
