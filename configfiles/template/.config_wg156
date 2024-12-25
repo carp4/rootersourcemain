@@ -106,12 +106,12 @@ CONFIG_TARGET_ipq40xx_generic=y
 # CONFIG_TARGET_ipq40xx_generic_DEVICE_pakedge_wr-1 is not set
 # CONFIG_TARGET_ipq40xx_generic_DEVICE_plasmacloud_pa1200 is not set
 # CONFIG_TARGET_ipq40xx_generic_DEVICE_plasmacloud_pa2200 is not set
-CONFIG_TARGET_ipq40xx_generic_DEVICE_qxwlan_e2600ac-c1=y
+# CONFIG_TARGET_ipq40xx_generic_DEVICE_qxwlan_e2600ac-c1 is not set
 # CONFIG_TARGET_ipq40xx_generic_DEVICE_qxwlan_e2600ac-c2 is not set
 # CONFIG_TARGET_ipq40xx_generic_DEVICE_sony_ncp-hg100-cellular is not set
 # CONFIG_TARGET_ipq40xx_generic_DEVICE_teltonika_rutx50 is not set
 # CONFIG_TARGET_ipq40xx_generic_DEVICE_wallys_dr40x9 is not set
-# CONFIG_TARGET_ipq40xx_generic_DEVICE_yyets_le1 is not set
+CONFIG_TARGET_ipq40xx_generic_DEVICE_yyets_le1=y
 # CONFIG_TARGET_ipq40xx_generic_DEVICE_zte_mf18a is not set
 # CONFIG_TARGET_ipq40xx_generic_DEVICE_zte_mf282plus is not set
 # CONFIG_TARGET_ipq40xx_generic_DEVICE_zte_mf286d is not set
@@ -120,12 +120,11 @@ CONFIG_TARGET_ipq40xx_generic_DEVICE_qxwlan_e2600ac-c1=y
 # CONFIG_TARGET_ipq40xx_generic_DEVICE_zte_mf287pro is not set
 # CONFIG_TARGET_ipq40xx_generic_DEVICE_zte_mf289f is not set
 # CONFIG_TARGET_ipq40xx_generic_DEVICE_zyxel_nbg6617 is not set
-# CONFIG_TARGET_ipq40xx_generic_DEVICE_zbt_wg156 is not set
 CONFIG_HAS_SUBTARGETS=y
 CONFIG_HAS_DEVICES=y
 CONFIG_TARGET_BOARD="ipq40xx"
 CONFIG_TARGET_SUBTARGET="generic"
-CONFIG_TARGET_PROFILE="DEVICE_qxwlan_e2600ac-c1"
+CONFIG_TARGET_PROFILE="DEVICE_yyets_le1"
 CONFIG_TARGET_ARCH_PACKAGES="arm_cortex-a7_neon-vfpv4"
 CONFIG_DEFAULT_TARGET_OPTIMIZATION="-Os -pipe"
 CONFIG_CPU_TYPE="cortex-a7+neon-vfpv4"
@@ -139,6 +138,7 @@ CONFIG_DEFAULT_dnsmasq=y
 CONFIG_DEFAULT_dropbear=y
 CONFIG_DEFAULT_firewall4=y
 CONFIG_DEFAULT_fstools=y
+CONFIG_DEFAULT_ipq-wifi-yyets_le1=y
 CONFIG_DEFAULT_iwinfo=y
 CONFIG_DEFAULT_kmod-ath10k-ct=y
 CONFIG_DEFAULT_kmod-gpio-button-hotplug=y
@@ -146,6 +146,7 @@ CONFIG_DEFAULT_kmod-leds-gpio=y
 CONFIG_DEFAULT_kmod-nft-offload=y
 CONFIG_DEFAULT_kmod-usb-dwc3=y
 CONFIG_DEFAULT_kmod-usb-dwc3-qcom=y
+CONFIG_DEFAULT_kmod-usb-ledtrig-usbport=y
 CONFIG_DEFAULT_kmod-usb3=y
 CONFIG_DEFAULT_libc=y
 CONFIG_DEFAULT_libgcc=y
@@ -1864,7 +1865,7 @@ CONFIG_PACKAGE_libiwinfo-data=y
 # CONFIG_PACKAGE_ipq-wifi-xiaomi_ax9000 is not set
 # CONFIG_PACKAGE_ipq-wifi-yuncore_ax880 is not set
 # CONFIG_PACKAGE_ipq-wifi-yuncore_fap650 is not set
-# CONFIG_PACKAGE_ipq-wifi-yyets_le1 is not set
+CONFIG_PACKAGE_ipq-wifi-yyets_le1=y
 # CONFIG_PACKAGE_ipq-wifi-zbtlink_zbt-z800ax is not set
 # CONFIG_PACKAGE_ipq-wifi-zte_mf269 is not set
 # CONFIG_PACKAGE_ipq-wifi-zte_mf287 is not set
@@ -2573,6 +2574,7 @@ CONFIG_PACKAGE_kmod-nft-offload=y
 # CONFIG_PACKAGE_kmod-macvlan is not set
 # CONFIG_PACKAGE_kmod-mdio-gpio is not set
 # CONFIG_PACKAGE_kmod-mhi-net is not set
+# CONFIG_PACKAGE_kmod-mhi-pcie is not set
 # CONFIG_PACKAGE_kmod-mhi-wwan-ctrl is not set
 # CONFIG_PACKAGE_kmod-mhi-wwan-mbim is not set
 # CONFIG_PACKAGE_kmod-mii is not set
@@ -2831,11 +2833,10 @@ CONFIG_PACKAGE_kmod-usb-core=y
 # CONFIG_PACKAGE_kmod-usb-dwc2-pci is not set
 CONFIG_PACKAGE_kmod-usb-dwc3=y
 CONFIG_PACKAGE_kmod-usb-dwc3-qcom=y
-CONFIG_PACKAGE_kmod-usb-ehci=y
 # CONFIG_PACKAGE_kmod-usb-hid is not set
 # CONFIG_PACKAGE_kmod-usb-hid-cp2112 is not set
 # CONFIG_PACKAGE_kmod-usb-hid-mcp2221 is not set
-# CONFIG_PACKAGE_kmod-usb-ledtrig-usbport is not set
+CONFIG_PACKAGE_kmod-usb-ledtrig-usbport=y
 # CONFIG_PACKAGE_kmod-usb-net is not set
 # CONFIG_PACKAGE_kmod-usb-net-aqc111 is not set
 # CONFIG_PACKAGE_kmod-usb-net-asix is not set
@@ -2895,7 +2896,7 @@ CONFIG_PACKAGE_kmod-usb-ehci=y
 # CONFIG_PACKAGE_kmod-usb-wdm is not set
 CONFIG_PACKAGE_kmod-usb-xhci-hcd=y
 # CONFIG_PACKAGE_kmod-usb-yealink is not set
-CONFIG_PACKAGE_kmod-usb2=y
+# CONFIG_PACKAGE_kmod-usb2 is not set
 # CONFIG_PACKAGE_kmod-usb2-pci is not set
 CONFIG_PACKAGE_kmod-usb3=y
 # CONFIG_PACKAGE_kmod-usbip is not set
@@ -6213,6 +6214,7 @@ CONFIG_PACKAGE_uclient-fetch=y
 # CONFIG_PACKAGE_alix2d13 is not set
 # CONFIG_PACKAGE_axt1800 is not set
 # CONFIG_PACKAGE_b1300 is not set
+# CONFIG_PACKAGE_basic156 is not set
 # CONFIG_PACKAGE_d240 is not set
 # CONFIG_PACKAGE_dir860l is not set
 # CONFIG_PACKAGE_ext-omnia is not set
@@ -6282,12 +6284,15 @@ CONFIG_PACKAGE_luci-theme-material=y
 # CONFIG_PACKAGE_ext-nowifi16 is not set
 # CONFIG_PACKAGE_ext-nowifiusb is not set
 # CONFIG_PACKAGE_ext-nowifiusb16 is not set
+# CONFIG_PACKAGE_ext-rooter-bare is not set
 # CONFIG_PACKAGE_ext-rooter-lite is not set
+# CONFIG_PACKAGE_ext-rooter-rasppi is not set
 # CONFIG_PACKAGE_ext-rooter16 is not set
 # CONFIG_PACKAGE_ext-smart is not set
 # CONFIG_PACKAGE_ext-wifirepeat is not set
 # CONFIG_PACKAGE_ext-world is not set
 # CONFIG_PACKAGE_ext-world16 is not set
+# CONFIG_PACKAGE_ext-worlds is not set
 # end of ROOter
 
 #
