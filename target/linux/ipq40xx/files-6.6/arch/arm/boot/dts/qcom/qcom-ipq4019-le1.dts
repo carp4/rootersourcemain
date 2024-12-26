@@ -215,6 +215,8 @@
 	pinctrl-0 = <&mdio_pins>;
 	pinctrl-names = "default";
 	status = "okay";
+	reset-gpios = <&tlmm 47 GPIO_ACTIVE_LOW>;
+	reset-delay-us = <2000>;
 };
 
 &prng {
