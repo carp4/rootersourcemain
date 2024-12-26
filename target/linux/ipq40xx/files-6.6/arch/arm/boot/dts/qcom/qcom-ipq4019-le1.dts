@@ -187,7 +187,7 @@
 			partition@180000 {
 				compatible = "denx,fit";
 				label = "firmware";
-				reg = <0x180000 0x1e80000>;
+				reg = <0x180000 0x1a00000>;
 			};
 		};
 	};
