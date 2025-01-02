@@ -3091,7 +3091,7 @@ TARGET_DEVICES += zbtlink_zbt-we3526
 define Device/zbtlink_zbt-wg1602-16m
   $(Device/dsa-migration)
   $(Device/uimage-lzma-loader)
-  IMAGE_SIZE := 16064k
+  IMAGE_SIZE := 32128k
   DEVICE_VENDOR := Zbtlink
   DEVICE_MODEL := ZBT-WG1602
   DEVICE_VARIANT := 16M
