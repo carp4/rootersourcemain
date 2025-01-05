@@ -11,6 +11,7 @@ mediatek_setup_interfaces()
 	acelink,ew-7886cax)
 		ucidef_set_interface_lan "eth0" "dhcp"
 		;;
+	huasifei,ws1698-256M|\
 	huasifei,ws1698)
 		ucidef_add_switch "switch0" \
 			"0:lan:4" "1:lan:3" "2:lan:2" "3:lan:1" "6u@eth0"

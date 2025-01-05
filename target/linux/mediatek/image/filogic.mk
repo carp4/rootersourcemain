@@ -1485,3 +1485,21 @@ endif
 endef
 TARGET_DEVICES += huasifei_ws1698
 
+define Device/huasifei_ws1698-256M
+  DEVICE_VENDOR := Huasifei
+  DEVICE_MODEL := WS1698AX-256M
+  DEVICE_DTS := mt7981b-huasifei_ws1698ax-256M
+  DEVICE_DTS_DIR := ../dts
+  DEVICE_PACKAGES := kmod-mt7981-firmware mt7981-wo-firmware kmod-usb2 kmod-usb3
+  UBINIZE_OPTS := -E 5
+  BLOCKSIZE := 128k
+  PAGESIZE := 2048
+  IMAGE_SIZE := 131072k
+ifneq ($(CONFIG_TARGET_ROOTFS_INITRAMFS),)
+  ARTIFACTS := initramfs-factory.ubi
+  ARTIFACT/initramfs-factory.ubi := append-image-stage initramfs-kernel.bin | ubinize-kernel
+endif
+  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
+endef
+TARGET_DEVICES += huasifei_ws1698-256M
+
