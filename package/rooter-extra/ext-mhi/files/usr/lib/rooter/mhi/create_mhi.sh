@@ -426,6 +426,18 @@ if [ "$idV" = "0e8d" ]; then
 	IFNAME="wwan0"
 else
 	IFNAME="mhi_hwip0"
+	if [ "$idV" = "413c" ]; then
+		ATCMDD="at^qtuner_enable?"
+		OX=$($ROOTER/gcom/gcom-locked "/dev/ttyUSB$CPORT" "run-at.gcom" "$CURRMODEM" "$ATCMDD")
+		log "$OX"
+		tr=$(echo "$OX" | grep "TRUE")
+		if [ ! -z "$tr" ]; then
+			ATCMDD="at^qtuner_enable=0"
+			OX=$($ROOTER/gcom/gcom-locked "/dev/ttyUSB$CPORT" "run-at.gcom" "$CURRMODEM" "$ATCMDD")
+			$ROOTER/luci/restartrun.sh $CURRMODEM
+			exit 0
+		fi
+	fi
 fi
 uci set modem.modem$CURRMODEM.netinterface=$IFNAME
 uci commit modem
@@ -695,4 +707,3 @@ uci commit modem
 if [ -e $ROOTER/connect/postconnect.sh ]; then
 	$ROOTER/connect/postconnect.sh $CURRMODEM
 fi
-                                
