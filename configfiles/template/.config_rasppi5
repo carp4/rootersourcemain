@@ -6127,6 +6127,7 @@ CONFIG_PACKAGE_uclient-fetch=y
 # CONFIG_PACKAGE_ext-logo is not set
 # CONFIG_PACKAGE_ext-menu is not set
 # CONFIG_PACKAGE_ext-mhi is not set
+# CONFIG_PACKAGE_ext-multimodem is not set
 # CONFIG_PACKAGE_ext-netselect is not set
 # CONFIG_PACKAGE_ext-openwisp is not set
 # CONFIG_PACKAGE_ext-ota is not set
@@ -6145,6 +6146,7 @@ CONFIG_PACKAGE_uclient-fetch=y
 # CONFIG_PACKAGE_luci-app-wrtbwmon is not set
 # CONFIG_PACKAGE_netrestart is not set
 # CONFIG_PACKAGE_pingtest is not set
+# CONFIG_PACKAGE_qfirehose is not set
 # CONFIG_PACKAGE_qlog is not set
 # CONFIG_PACKAGE_quec_upload is not set
 # CONFIG_PACKAGE_udp-tunnel is not set
@@ -6238,6 +6240,7 @@ CONFIG_PACKAGE_luci-theme-material=y
 # CONFIG_PACKAGE_ext-rooter-bare is not set
 # CONFIG_PACKAGE_ext-rooter-lite is not set
 # CONFIG_PACKAGE_ext-rooter-rasppi is not set
+# CONFIG_PACKAGE_ext-rooter-rasppi16 is not set
 # CONFIG_PACKAGE_ext-rooter16 is not set
 # CONFIG_PACKAGE_ext-smart is not set
 # CONFIG_PACKAGE_ext-wifirepeat is not set
@@ -6857,7 +6860,6 @@ CONFIG_PACKAGE_libjson-script=y
 # CONFIG_PACKAGE_pservice is not set
 # CONFIG_PACKAGE_psmisc is not set
 # CONFIG_PACKAGE_pv is not set
-# CONFIG_PACKAGE_qfirehose is not set
 # CONFIG_PACKAGE_qmi-utils is not set
 # CONFIG_PACKAGE_qrencode is not set
 # CONFIG_PACKAGE_quectel-timesync is not set
@@ -7004,4 +7006,4 @@ CONFIG_PACKAGE_ucode-mod-lua=y
 # end of Font-Utils
 # end of Xorg
 
-CONFIG_OVERRIDE_PKGS="luci-app-openwisp luci-app-v2raya luci-proto-mbim qfirehose"
+CONFIG_OVERRIDE_PKGS="luci-app-openwisp luci-app-v2raya luci-proto-mbim"
