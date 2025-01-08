@@ -4,7 +4,7 @@
 . /lib/functions/network.sh
 . /usr/share/libubox/jshn.sh
 . /lib/mwan3/common.sh
-
+ 
 report_connected_v4() {
 	local address
 

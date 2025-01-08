@@ -3,7 +3,7 @@
 . /lib/functions.sh
 . /lib/functions/network.sh
 . /lib/mwan3/mwan3.sh
-
+ 
 trap_with_arg()
 {
 	func="$1" ; shift
