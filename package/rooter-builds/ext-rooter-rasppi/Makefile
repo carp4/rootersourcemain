@@ -15,7 +15,6 @@ define Package/ext-rooter-rasppi
   CATEGORY:=ROOter
   DEPENDS:=+luci +ext-rooter-basic +pingtest +ext-logo \
 		+luci-app-ddns +ddns-scripts \
-		+luci-app-mwan3 +luci-app-dnsmasq-ipset \
 		+luci-app-rootervpn +ext-wireguard \
 		+bwmon +464xlat +webconsole \
 		+ext-theme +luci-theme-argon +luci-theme-argondark +ext-login \
