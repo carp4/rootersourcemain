@@ -230,8 +230,15 @@ case "$vendor" in
 		fi
 	;;
 	"$PCI_VENDOR_ID_THALES" )
-		log "Thales not supported"
-		exit 0
+		if [ "$device" = 00b3  -o "$device" = 00b4 ]; then
+			uVid="413c"
+			uMa="Thales"
+			uPid="81df"
+			uPr="MV-31"
+		else
+			log "Thales not supported"
+			exit 0
+		fi
 	;;
 	"$PCI_VENDOR_ID_FIB" )
 		uVid="0e8d"

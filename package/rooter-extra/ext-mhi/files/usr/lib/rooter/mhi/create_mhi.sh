@@ -426,6 +426,10 @@ if [ "$idV" = "0e8d" ]; then
 	IFNAME="wwan0"
 else
 	IFNAME="mhi_hwip0"
+	uMa=$(uci -q get modem.modem$CURRMODEM.manuf)
+	if "$uMa" = "Thales" ]; then
+		IFNAME="mhi_hwip0_mbim"
+	fi
 	if [ "$idV" = "413c" ]; then
 		ATCMDD="at^qtuner_enable?"
 		OX=$($ROOTER/gcom/gcom-locked "/dev/ttyUSB$CPORT" "run-at.gcom" "$CURRMODEM" "$ATCMDD")
