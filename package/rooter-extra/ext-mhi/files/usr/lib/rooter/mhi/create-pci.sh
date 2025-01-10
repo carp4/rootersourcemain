@@ -179,8 +179,15 @@ case "$vendor" in
 						uPr="RM500"
 						# subvendor - 17cb  subdevice - 0309
 					else
-						log "Modem not supported"
-						exit 0
+						if [ "$subvendor" = 17cb -a "$subdevice" = 5051 ]; then
+							uVid="2c7c"
+							uMa="Quectel"
+							uPid="0800"
+							uPr="RM505"
+						else
+							log "Modem not supported"
+							exit 0
+						fi
 					fi
 				else
 					if [ "$device" = 0304 ]; then

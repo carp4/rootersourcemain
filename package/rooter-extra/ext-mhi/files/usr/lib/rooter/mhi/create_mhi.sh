@@ -165,6 +165,9 @@ foxunlock() {
 
 	  if [ $UNLOCK_RESULT -ne 0 ]; then
 		log "SDX55 FCC unlock v2 failed"
+	  else
+	    log "SDX55 FCC unlock v2 suceeded"
+		return
 	  fi
 	fi
 
@@ -175,9 +178,10 @@ foxunlock() {
 
 	  if [ $UNLOCK_RESULT -ne 0 ]; then
 		log "SDX55 FCC unlock v1 failed"
+	  else
+	    log "SDX55 FCC unlock v1 suceeded"
 	  fi
 	fi
-	log "Unlock : $UNLOCK_RESULT"
 }
 
 fcc_unlock() {
