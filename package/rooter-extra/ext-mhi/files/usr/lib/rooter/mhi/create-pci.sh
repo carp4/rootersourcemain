@@ -96,12 +96,16 @@ while IFS= read -r line; do
 	fi
 done < /tmp/mhipci
 
-echo "1" > /sys/bus/pci/devices/$pcinum/remove
-log "PCi Remove"
-sleep 25
-echo "1" > /sys/bus/pci/rescan
-log "Rescan"
-sleep 5
+vendor=$(cat /sys/bus/pci/devices/$pcinum/vendor)
+vendor=${vendor:2:4}
+if [ "$vendor" != "14c3" ]; then
+	echo "1" > /sys/bus/pci/devices/$pcinum/remove
+	log "PCi Remove"
+	sleep 25
+	echo "1" > /sys/bus/pci/rescan
+	log "Rescan"
+	sleep 5
+fi
 MODCNT=2
 COUNTER=1
 retresult=0
@@ -173,21 +177,24 @@ case "$vendor" in
 			else
 				if [ "$device" = 0306 ]; then
 					if [ "$subvendor" = 17cb -a "$subdevice" = 010c ]; then
-						uVid="2c7c"
-						uMa="Quectel"
-						uPid="0800"
-						uPr="RM500"
-						# subvendor - 17cb  subdevice - 0309
-					else
-						if [ "$subvendor" = 17cb -a "$subdevice" = 5051 ]; then
+						ATCMDD="ATI"
+						OX=$($ROOTER/gcom/gcom-locked "/dev/wwan0at0" "run-at.gcom" "$CURRMODEM" "$ATCMDD")
+						log "$OX"
+						t99=$(echo "$OX" | grep "T99W175")
+						if [ ! -z "$t99" ]; then
+							uVid="413c"
+							uMa="Foxconn"
+							uPid="81df"
+							uPr="T99W175"
+						else
 							uVid="2c7c"
 							uMa="Quectel"
 							uPid="0800"
-							uPr="RM505"
-						else
-							log "Modem not supported"
-							exit 0
+							uPr="RM500"
 						fi
+					else
+						log "Modem not supported"
+						exit 0
 					fi
 				else
 					if [ "$device" = 0304 ]; then
@@ -237,15 +244,8 @@ case "$vendor" in
 		fi
 	;;
 	"$PCI_VENDOR_ID_THALES" )
-		if [ "$device" = 00b3  -o "$device" = 00b4 ]; then
-			uVid="413c"
-			uMa="Thales"
-			uPid="81df"
-			uPr="MV-31"
-		else
-			log "Thales not supported"
-			exit 0
-		fi
+		log "Thales not supported"
+		exit 0
 	;;
 	"$PCI_VENDOR_ID_FIB" )
 		uVid="0e8d"
