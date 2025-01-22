@@ -225,7 +225,7 @@ int main(int argc, char *argv[])
 
 	//get_uart_dev_name(dev_name,sizeof(dev_name));
 	//if(strlen(dev_name) == 0)
-		strcpy(dname,"/dev/ttyUSB1");
+		strcpy(dname,"/dev/ttyUSB0");
 	//else
 	//	sprintf(dname,"/dev/%s",dev_name);
 	
