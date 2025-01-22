@@ -197,7 +197,7 @@ int data_analysis(unsigned char *buf)
 }
 int get_uart_dev_name(char *dev_name,int len)
 {
-	FILE *fp = popen("find /sys/devices/platform/ehci-platform.1/usb2/2-1/2-1.3/ -name ttyUSB* | head -n1 | cut -f10 -d/","r");
+	FILE *fp = popen("find /sys/devices/platform/1e1c0000.xhci/usb2/2-1/2-1.3/ -name ttyUSB* | head -n1 | cut -f10 -d/","r");
 
 	if(fp != NULL){
 		fgets(dev_name,len,fp);
@@ -223,11 +223,11 @@ int main(int argc, char *argv[])
 	char dev_name[32] = {0};
 	char dname[64] = {0};
 
-	//get_uart_dev_name(dev_name,sizeof(dev_name));
-	//if(strlen(dev_name) == 0)
-		strcpy(dname,"/dev/ttyUSB0");
-	//else
-	//	sprintf(dname,"/dev/%s",dev_name);
+	get_uart_dev_name(dev_name,sizeof(dev_name));
+	if(strlen(dev_name) == 0)
+		strcpy(dname,"/dev/ttyUSB1");
+	else
+		sprintf(dname,"/dev/%s",dev_name);
 	
 	/*打开串口  */
 	fd = open(dname, O_RDWR | O_NOCTTY);// | O_NDELAY);
