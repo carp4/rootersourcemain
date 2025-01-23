@@ -255,7 +255,7 @@ define Device/glinet_gl-x1200-common
   DEVICE_VENDOR := GL.iNet
   DEVICE_MODEL := GL-X1200
   DEVICE_PACKAGES := kmod-ath10k-ct ath10k-firmware-qca9888-ct-htt kmod-usb2 \
-	kmod-usb-storage block-mount
+	kmod-usb-storage block-mount x1200 kmod-usb-serial-cp210x
   IMAGE_SIZE := 16000k
 endef
 
