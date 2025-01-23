@@ -197,7 +197,7 @@ int data_analysis(unsigned char *buf)
 }
 int get_uart_dev_name(char *dev_name,int len)
 {
-	FILE *fp = popen("find /sys/devices/platform/1e1c0000.xhci/usb2/2-1/2-1.3/ -name ttyUSB* | head -n1 | cut -f10 -d/","r");
+	FILE *fp = popen("find /sys/devices/platform/ahb/1b000000.usb/usb1/1-1/1-1.3/1-1.3:1.0/ -name ttyUSB* | head -n1 | cut -f10 -d/","r");
 
 	if(fp != NULL){
 		fgets(dev_name,len,fp);
