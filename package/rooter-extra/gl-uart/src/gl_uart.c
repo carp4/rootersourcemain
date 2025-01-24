@@ -223,11 +223,11 @@ int main(int argc, char *argv[])
 	char dev_name[32] = {0};
 	char dname[64] = {0};
 
-	get_uart_dev_name(dev_name,sizeof(dev_name));
-	if(strlen(dev_name) == 0)
+	//get_uart_dev_name(dev_name,sizeof(dev_name));
+	//if(strlen(dev_name) == 0)
 		strcpy(dname,"/dev/ttyUSB1");
-	else
-		sprintf(dname,"/dev/%s",dev_name);
+	//else
+		//sprintf(dname,"/dev/%s",dev_name);
 	
 	/*打开串口  */
 	fd = open(dname, O_RDWR | O_NOCTTY);// | O_NDELAY);
