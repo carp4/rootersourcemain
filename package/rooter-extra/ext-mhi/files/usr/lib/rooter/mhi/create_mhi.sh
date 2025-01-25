@@ -166,7 +166,7 @@ foxunlock() {
 	  if [ $UNLOCK_RESULT -ne 0 ]; then
 		log "SDX55 FCC unlock v2 failed"
 	  else
-	    log "SDX55 FCC unlock v2 suceeded"
+	    log "SDX55 FCC unlock v2 succeded"
 		return
 	  fi
 	fi
@@ -179,7 +179,7 @@ foxunlock() {
 	  if [ $UNLOCK_RESULT -ne 0 ]; then
 		log "SDX55 FCC unlock v1 failed"
 	  else
-	    log "SDX55 FCC unlock v1 suceeded"
+	    log "SDX55 FCC unlock v1 succeded"
 	  fi
 	fi
 }
@@ -354,14 +354,21 @@ if $QUECTEL; then
 		sleep 10
 	fi
 fi
+
+DEVICE="/dev/wwan0mbim0"
+
 if [ "$idV" = "1199" ]; then
 	$ROOTER/connect/bandmask $CURRMODEM 0
 fi
 if [ "$idV" = "413c" ]; then
+	foxunlock
 	$ROOTER/connect/bandmask $CURRMODEM 3
 fi
 if [ "$idV" = "0e8d" ]; then
 	fcc_unlock
+	$ROOTER/connect/bandmask $CURRMODEM 2
+fi
+if [ "$idV" = "2cb7" ]; then
 	$ROOTER/connect/bandmask $CURRMODEM 2
 fi
 
@@ -425,7 +432,6 @@ if [ -e $ROOTER/modem-led.sh ]; then
 	$ROOTER/modem-led.sh $CURRMODEM 2
 fi
 
-DEVICE="/dev/wwan0mbim0"
 if [ "$idV" = "0e8d" ]; then
 	IFNAME="wwan0"
 else
@@ -541,9 +547,9 @@ log "$DEVICE_DATA_FORMAT_OUT"
 DEVICE_LLP=`echo "$DEVICE_DATA_FORMAT_OUT" | sed -n "s/.*Link layer protocol:.*'\(.*\)'.*/\1/p"`
 SETFORM=`qmicli -p -d $DEVICE --wda-set-data-format="raw-ip" 2>/dev/null`
 
-if [ "$idV" = "413c" ]; then
-	foxunlock
-fi
+#if [ "$idV" = "413c" ]; then
+#	foxunlock
+#fi
 
 #
 # start network

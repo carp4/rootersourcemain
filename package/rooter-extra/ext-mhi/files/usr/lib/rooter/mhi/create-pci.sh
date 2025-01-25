@@ -146,7 +146,7 @@ PCI_VENDOR_ID_QUECTEL="1eac"
 PCI_VENDOR_ID_FOXCONN="105b"
 PCI_VENDOR_ID_THALES="1269"
 PCI_VENDOR_ID_FIB="14c3"
-
+		
 case "$vendor" in
 	"$PCI_VENDOR_ID_QCOM" )
 		if [ "$device" = 0308 ]; then
@@ -165,10 +165,20 @@ case "$vendor" in
 		else
 			if [ "$device" = 0309 ]; then
 				if [ "$subvendor" = 17cb ]; then
-					uVid="2c7c"
-					uMa="Quectel"
-					uPid="0122"
-					uPr="RM551"
+					ATCMDD="ATI"
+					OX=$($ROOTER/gcom/gcom-locked "/dev/wwan0at0" "run-at.gcom" "$CURRMODEM" "$ATCMDD")
+					FM190=$(echo "$OX" | grep "FM190")
+					if [ ! -z "$FM190" ]; then
+						uVid="2cb7"
+						uMa="Fibocom"
+						uPid="0001"
+						uPr="FM190"
+					else
+						uVid="2c7c"
+						uMa="Quectel"
+						uPid="0122"
+						uPr="RM551"
+					fi
 					# subvendor - 17cb  subdevice - 0309
 				else
 					log "Modem not supported"
@@ -179,7 +189,6 @@ case "$vendor" in
 					if [ "$subvendor" = 17cb -a "$subdevice" = 010c ]; then
 						ATCMDD="ATI"
 						OX=$($ROOTER/gcom/gcom-locked "/dev/wwan0at0" "run-at.gcom" "$CURRMODEM" "$ATCMDD")
-						log "$OX"
 						t99=$(echo "$OX" | grep "T99W175")
 						if [ ! -z "$t99" ]; then
 							uVid="413c"
