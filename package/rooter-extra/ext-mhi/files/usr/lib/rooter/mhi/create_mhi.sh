@@ -490,7 +490,7 @@ if [ 1 = 0 ]; then
 
 	exit 0
 fi	
-if [ "$idV" = "0e8d" ]; then
+if [ "$idV" = "0e8d" -o "$idV" = "2cb7" ]; then
 	pdptype="ipv4"
 	IPVAR=$(uci -q get modem.modeminfo$CURRMODEM.pdptype)
 	case "$IPVAR" in
