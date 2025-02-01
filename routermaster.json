@@ -467,5 +467,32 @@
 		"imagepath": "/mediatek/filogic/",
 		"mod": "GliNet_MT6000",
 		"ext": "-upgrade.bin"
+	},
+	"WS1610": {
+		"details": "Huasifei WS1610",
+		"type": "1",
+		"build": "2305",
+		"config": ".config_ws1610",
+		"image": "openwrt-mediatek-filogic-huasifei_ws1610-squashfs-sysupgrade.bin",
+		"imagepath": "/mediatek/filogic/",
+		"mod": "Huasifei-WS1610",
+		"ext": "-upgrade.bin",
+		"custom": {
+			"name": {
+				"model": "WS1610",
+				"hostname": "WS1610"
+			},
+			"wifi": {
+				"SSID2G": "wifi6-2.4g",
+				"SSID5G": "wifi6-5.8g",
+				"Password": "12345678"
+			},
+			"image": {
+				"Material": "hua.png",
+				"Argon": "hua.png",
+				"Tomato": "hua.png"
+			},
+			"files": "/huasifei/files1698/"	
+		}
 	}
 }

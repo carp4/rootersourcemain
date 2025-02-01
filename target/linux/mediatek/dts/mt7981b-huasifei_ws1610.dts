@@ -1,0 +1,173 @@
+/dts-v1/;
+
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/input/input.h>
+
+#include "mt7981.dtsi"
+
+/ {
+	model = "HUASIFEI WS1610";
+	compatible = "huasifei,ws1610", "mediatek,mt7981";
+
+	aliases {
+		serial0 = &uart0;
+		led-boot = &led_status_lan;
+		led-failsafe = &led_status_lan;
+		led-running = &led_status_lan;
+		led-upgrade = &led_status_lan;
+	};
+
+	memory@40000000 {
+		reg = <0 0x40000000 0 0x40000000>;
+	};
+	
+	
+	chosen {
+		stdout-path = "serial0:115200n8";
+	};
+
+	gpio-keys {
+		compatible = "gpio-keys";
+
+		reset {
+			label = "reset";
+			linux,code = <KEY_RESTART>;
+			gpios = <&pio 1 GPIO_ACTIVE_LOW>;
+		};
+		
+	};
+
+	leds {
+		compatible = "gpio-leds";
+
+		led_status_red: red {
+			label = "amber:5g";
+			gpios = <&pio 6 GPIO_ACTIVE_LOW>;
+		};
+
+		led_status_green: green {
+			label = "green:4g";
+			gpios = <&pio 9 GPIO_ACTIVE_LOW>;
+		};
+		
+		led_status_blue: blue {
+			label = "green:5g";
+			gpios = <&pio 7 GPIO_ACTIVE_LOW>;
+		};
+		
+		led_status_4g: 4g {
+			label = "amber:4g";
+			gpios = <&pio 11 GPIO_ACTIVE_LOW>;
+		};
+		
+		led_status_lan: lan {
+			label = "green:lan";
+			gpios = <&pio 10 GPIO_ACTIVE_LOW>;
+		};
+		
+		led_status_wan: wan {
+			label = "amber:gbe";
+			gpios = <&pio 8 GPIO_ACTIVE_HIGH>;
+		};
+
+	};
+};
+
+&eth {
+	status = "okay";
+
+	gmac0: mac@0 {
+		compatible = "mediatek,eth-mac";
+		reg = <0>;
+		phy-mode = "2500base-x";
+		nvmem-cell-names = "mac-address";
+		nvmem-cells = <&macaddr_factory_004>;
+
+		fixed-link {
+			speed = <2500>;
+			full-duplex;
+			pause;
+		};
+	};
+	
+	gmac1: mac@1 {
+		compatible = "mediatek,eth-mac";
+		reg = <1>;
+		phy-mode = "gmii";
+		phy-handle = <&int_gbe_phy>;
+	};
+};
+
+&mdio_bus {
+	switch: switch@0 {
+		compatible = "mediatek,mt7531";
+		reg = <31>;
+		reset-gpios = <&pio 39 GPIO_ACTIVE_HIGH>;
+		interrupt-controller;
+		#interrupt-cells = <1>;
+		interrupt-parent = <&pio>;
+		interrupts = <38 IRQ_TYPE_LEVEL_HIGH>;
+	};
+};
+
+&pio {
+	i2c0_pins: i2c0-pins {
+		mux {
+			function = "i2c";
+			groups = "i2c0_1";
+		};
+	};
+
+	spi0_flash_pins: spi0-pins {
+		mux {
+			function = "spi";
+			groups = "spi0", "spi0_wp_hold";
+		};
+
+		conf-pu {
+			pins = "SPI0_CS", "SPI0_HOLD", "SPI0_WP";
+			drive-strength = <8>;
+			mediatek,pull-up-adv = <0>;
+		};
+
+		conf-pd {
+			pins = "SPI0_CLK", "SPI0_MOSI", "SPI0_MISO";
+			drive-strength = <8>;
+			mediatek,pull-down-adv = <0>;
+		};
+	};
+};
+
+&uart0 {
+	status = "okay";
+};
+
+&watchdog {
+	status = "okay";
+};
+
+&wifi {
+	status = "okay";
+
+	mediatek,mtd-eeprom = <&factory 0x0>;
+};
+
+&usb_phy {
+	status = "okay";
+};
+
+&xhci {
+	status = "okay";
+};
+
+&factory {
+	compatible = "nvmem-cells";
+	#address-cells = <1>;
+	#size-cells = <1>;
+
+	macaddr_factory_004: macaddr@004 {
+		reg = <0x004 0x6>;
+	};
+};
+ 
+
