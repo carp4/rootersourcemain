@@ -1524,6 +1524,7 @@ define Device/huastlink_hc-g60
   DEVICE_VENDOR := Huastlink
   DEVICE_MODEL := HC-G60
   DEVICE_DTS := mt7981b-huastlink_hc-g60
+  DEVICE_DTS_DIR := ../dts
   DEVICE_PACKAGES := kmod-mt7981-firmware mt7981-wo-firmware kmod-usb2 kmod-usb3
   KERNEL_IN_UBI := 1
   UBINIZE_OPTS := -E 5
