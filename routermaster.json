@@ -494,5 +494,35 @@
 			},
 			"files": "/huasifei/files1698/"	
 		}
+	},
+	"Z8109-128": {
+		"details": "ZBT Z8109-128",
+		"type": "1",
+		"build": "2305",
+		"config": ".config_z8109-128",
+		"image": "openwrt-mediatek-filogic-z8109ax-128m-squashfs-sysupgrade.bin",
+		"imagepath": "/mediatek/filogic/",
+		"mod": "ZBT-Z8109AX-128",
+		"ext": "-upgrade.bin",
+		"custom": {
+			"name": {
+				"model": "ZBT Z8109AX-128M"
+			}
+		}
+	},
+	"Z8109-512": {
+		"details": "ZBT Z8109-512",
+		"type": "1",
+		"build": "2305",
+		"config": ".config_z8109-512",
+		"image": "openwrt-mediatek-filogic-z8109ax-512m-squashfs-sysupgrade.bin",
+		"imagepath": "/mediatek/filogic/",
+		"mod": "ZBT-Z8109AX-512",
+		"ext": "-upgrade.bin",
+		"custom": {
+			"name": {
+				"model": "ZBT Z8109AX-512M"
+			}
+		}
 	}
 }
