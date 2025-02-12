@@ -113,6 +113,13 @@ huasifei,ws1610)
 	ucidef_set_led_netdev "wlan2g" "WLAN2G" "amber:4g" "phy0-ap0"
 	ucidef_set_led_netdev "wlan5g" "WLAN5G" "green:4g" "phy1-ap0"
 	;;
+z8109ax-512m|\
+z8109ax-128m)
+	ucidef_set_led_netdev "modem1" "modem1" "modem1:status" "wwan0"
+	ucidef_set_led_netdev "modem2" "modem2" "modem2:status" "wwan1"
+	ucidef_set_led_netdev "modem3" "modem3" "modem3:status" "wwan2"
+	ucidef_set_led_netdev "modem4" "modem4" "modem4:status" "wwan3"
+	;;
 zbtlink,zbt-z8103ax)
 	ucidef_set_led_netdev "wan" "wan" "green:wan" "eth1" "link tx rx"
 	;;
