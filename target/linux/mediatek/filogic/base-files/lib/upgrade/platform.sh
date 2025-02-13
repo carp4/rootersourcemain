@@ -134,7 +134,7 @@ platform_do_upgrade() {
 		;;
 	h3c,magic-nx30-pro|\
 	jcg,q30-pro|\
-	huasifei,ws1610\
+	huasifei,ws1610|\
 	mediatek,mt7981-rfb|\
 	netcore,n60|\
 	qihoo,360t7|\
