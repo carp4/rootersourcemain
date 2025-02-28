@@ -524,5 +524,18 @@
 				"model": "ZBT Z8109AX-512M"
 			}
 		}
+	},
+	"A1300": {
+		"details": "Gl.iNet A1300",
+		"type": "2",
+		"build": "2102",
+		"config": ".config_a1300",
+		"image1": "openwrt-ipq40xx-generic-glinet_gl-a1300-squashfs-sysupgrade.bin",	
+		"image2": "openwrt-ipq40xx-generic-glinet_gl-a1300-squashfs-factory.ubi",
+		"imagepath": "/ipq40xx/generic/",
+		"mod": "GliNet-A1300",
+		"ext1": "-upgrade.bin",
+		"ext2": "-factory.ubi",
+		"addons": ["readme.pdf"]
 	}
 }
