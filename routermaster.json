@@ -213,7 +213,8 @@
 		"imagepath": "/mediatek/filogic/",
 		"mod": "Banana-Pi-R3-Mini",
 		"ext1": "-factory.bin",
-		"ext2": "-upgrade.itb"
+		"ext2": "-upgrade.itb",
+		"addons": ["BPiR3Mini.txt", "bpi-r3-mini.zip"]
 	},
 	"MT2500": {
 		"details": "Gl.iNet MT2500",
