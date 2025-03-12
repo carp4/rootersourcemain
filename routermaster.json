@@ -538,5 +538,18 @@
 		"ext1": "-upgrade.bin",
 		"ext2": "-factory.ubi",
 		"addons": ["readme.pdf"]
+	},
+	"TGR1900": {
+		"details": "TP-Link TGR1900",
+		"type": "2",
+		"build": "2305",
+		"config": ".config_tgr1900",
+		"image1": "openwrt-ipq806x-chromium-tplink_onhub-squashfs-sysupgrade.bin",	
+		"image2": "openwrt-ipq806x-chromium-tplink_onhub-squashfs-factory.bin",
+		"imagepath": "/ipq806x/chromium/",
+		"mod": "TP-Link-TGR1900",
+		"ext1": "-upgrade.bin",
+		"ext2": "-factory.bin",
+		"addons": ["readme.pdf"]
 	}
 }
