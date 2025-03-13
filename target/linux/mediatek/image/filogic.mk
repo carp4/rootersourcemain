@@ -1581,8 +1581,7 @@ define Device/huasifei_wh3000-emmc
    DEVICE_DTS := mt7981b-huasifei-wh3000-emmc
    DEVICE_DTS_DIR := ../dts
    DEVICE_PACKAGES := kmod-mt7915e kmod-mt7981-firmware mt7981-wo-firmware \
-   kmod-usb-net-cdc-mbim kmod-usb-net-qmi-wwan kmod-usb-serial-option \
-   kmod-usb3 automount e2fsprogs ethtool fstools f2fsck mkf2fs uqmi \
+   kmod-usb3 automount e2fsprogs ethtool fstools f2fsck mkf2fs \
    fdisk partx-utils luci uboot-envtools mtd block-mount fitblk \
    procd procd-seccomp procd-ujail uci uclient-fetch kmod-mmc
    KERNEL := kernel-bin | lzma | fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb
