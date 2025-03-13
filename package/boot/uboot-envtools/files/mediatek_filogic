@@ -93,6 +93,7 @@ xiaomi,redmi-router-ax6000-ubootmod|\
 zyxel,ex5601-t0-ubootmod)
 	ubootenv_add_ubi_default
 	;;
+huasifei,wh3000-emmc|\
 glinet,gl-mt2500|\
 glinet,gl-mt6000)
 	local envdev=$(find_mmc_part "u-boot-env")

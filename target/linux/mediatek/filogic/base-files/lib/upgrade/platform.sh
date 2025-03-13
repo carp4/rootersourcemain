@@ -65,6 +65,7 @@ platform_do_upgrade() {
 
 	case "$board" in
 	acer,predator-w6|\
+	huasifei,wh3000-emmc|\
 	smartrg,sdg-8612|\
 	smartrg,sdg-8614|\
 	smartrg,sdg-8622|\
@@ -256,6 +257,7 @@ platform_copy_config() {
 		esac
 		;;
 	acer,predator-w6|\
+	huasifei,wh3000-emmc|\
 	glinet,gl-mt2500|\
 	glinet,gl-mt6000|\
 	glinet,gl-x3000|\
