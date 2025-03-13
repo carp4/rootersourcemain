@@ -1535,6 +1535,8 @@ ifneq ($(CONFIG_TARGET_ROOTFS_INITRAMFS),)
   ARTIFACTS := initramfs-factory.ubi
   ARTIFACT/initramfs-factory.ubi := append-image-stage initramfs-kernel.bin | ubinize-kernel
 endif
+  IMAGES := sysupgrade.bin factory.bin
+  IMAGE/factory.bin := append-ubi | check-size $$$$(IMAGE_SIZE)
   IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
 endef
 TARGET_DEVICES += huastlink_hc-g60
@@ -1579,7 +1581,8 @@ define Device/huasifei_wh3000-emmc
    DEVICE_DTS := mt7981b-huasifei-wh3000-emmc
    DEVICE_DTS_DIR := ../dts
    DEVICE_PACKAGES := kmod-mt7915e kmod-mt7981-firmware mt7981-wo-firmware \
-   kmod-usb3 automount e2fsprogs ethtool fstools f2fsck mkf2fs \
+   kmod-usb-net-cdc-mbim kmod-usb-net-qmi-wwan kmod-usb-serial-option \
+   kmod-usb3 automount e2fsprogs ethtool fstools f2fsck mkf2fs uqmi \
    fdisk partx-utils luci uboot-envtools mtd block-mount fitblk \
    procd procd-seccomp procd-ujail uci uclient-fetch kmod-mmc
    KERNEL := kernel-bin | lzma | fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb
