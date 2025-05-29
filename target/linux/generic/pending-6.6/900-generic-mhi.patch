@@ -1,6 +1,5 @@
-diff -urN a/drivers/bus/mhi/host/pci_generic.c b/drivers/bus/mhi/host/pci_generic.c
---- a/drivers/bus/mhi/host/pci_generic.c	2024-10-29 14:34:17.000000000 -0700
-+++ b/drivers/bus/mhi/host/pci_generic.c	2025-01-10 06:47:50.000000000 -0800
+--- a/drivers/bus/mhi/host/pci_generic.c
++++ b/drivers/bus/mhi/host/pci_generic.c
 @@ -247,6 +247,8 @@
  	MHI_CHANNEL_CONFIG_UL(14, "QMI", 4, 0),
  	MHI_CHANNEL_CONFIG_DL(15, "QMI", 4, 0),
@@ -54,7 +53,16 @@ diff -urN a/drivers/bus/mhi/host/pci_generic.c b/drivers/bus/mhi/host/pci_generi
  };
  
  static struct mhi_event_config mhi_telit_fn990_events[] = {
-@@ -618,6 +624,15 @@
+@@ -612,12 +618,24 @@
+ 		.driver_data = (kernel_ulong_t) &mhi_telit_fn980_hw_v1_info },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_QCOM, 0x0306),
+ 		.driver_data = (kernel_ulong_t) &mhi_qcom_sdx55_info },
++	/* RM520N-GL variant with Qualcomm vendor and subvendor ID */
++	{ PCI_DEVICE_SUB(PCI_VENDOR_ID_QCOM, 0x0308, PCI_VENDOR_ID_QCOM, 0x5201),
++		.driver_data = (kernel_ulong_t) &mhi_quectel_rm5xx_info },
+ 	/* Telit FN990 */
+ 	{ PCI_DEVICE_SUB(PCI_VENDOR_ID_QCOM, 0x0308, 0x1c5d, 0x2010),
+ 		.driver_data = (kernel_ulong_t) &mhi_telit_fn990_info },
  	/* Telit FE990 */
  	{ PCI_DEVICE_SUB(PCI_VENDOR_ID_QCOM, 0x0308, 0x1c5d, 0x2015),
  		.driver_data = (kernel_ulong_t) &mhi_telit_fn990_info },
@@ -70,7 +78,7 @@ diff -urN a/drivers/bus/mhi/host/pci_generic.c b/drivers/bus/mhi/host/pci_generi
  	{ PCI_DEVICE(PCI_VENDOR_ID_QCOM, 0x0308),
  		.driver_data = (kernel_ulong_t) &mhi_qcom_sdx65_info },
  	{ PCI_DEVICE(PCI_VENDOR_ID_QCOM, 0x0309),
-@@ -639,6 +654,8 @@
+@@ -639,6 +657,8 @@
  	/* T99W175 (sdx55), Both for eSIM and Non-eSIM */
  	{ PCI_DEVICE(PCI_VENDOR_ID_FOXCONN, 0xe0ab),
  		.driver_data = (kernel_ulong_t) &mhi_foxconn_sdx55_info },
@@ -79,7 +87,7 @@ diff -urN a/drivers/bus/mhi/host/pci_generic.c b/drivers/bus/mhi/host/pci_generi
  	/* DW5930e (sdx55), With eSIM, It's also T99W175 */
  	{ PCI_DEVICE(PCI_VENDOR_ID_FOXCONN, 0xe0b0),
  		.driver_data = (kernel_ulong_t) &mhi_foxconn_sdx55_info },
-@@ -891,8 +908,10 @@
+@@ -891,8 +911,10 @@
  	err = mhi_prepare_for_power_up(mhi_cntrl);
  	if (err)
  		goto err_try_reset;
