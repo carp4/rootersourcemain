@@ -572,5 +572,18 @@
 		"mod": "GliNet_X3000-PCIE",
 		"ext": "-upgrade.bin",
 		"addons": ["pcie.txt"]
+	},
+	"X1200": {
+		"details": "Gl.iNet X1200",
+		"type": "2",
+		"build": "main",
+		"config": ".config_x1200",
+		"image1": "openwrt-ath79-nand-glinet_gl-x1200-nor-nand-squashfs-sysupgrade.bin",	
+		"image2": "openwrt-ath79-nand-glinet_gl-x1200-nor-nand-squashfs-factory.img",
+		"imagepath": "/ath79/nand/",
+		"mod": "GliNet-X1200-NOR-NAND",
+		"ext1": "-upgrade.bin",
+		"ext2": "-factory.img",
+		"addons": ["readme.pdf"]
 	}
 }
