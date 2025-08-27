@@ -2012,6 +2012,12 @@ CONFIG_PACKAGE_wireless-regdb=y
 # end of Fonts
 
 #
+# gl-inet
+#
+# CONFIG_PACKAGE_gl-uart is not set
+# end of gl-inet
+
+#
 # Kernel modules
 #
 
@@ -6157,6 +6163,7 @@ CONFIG_PACKAGE_uclient-fetch=y
 # CONFIG_PACKAGE_ext-logo is not set
 # CONFIG_PACKAGE_ext-menu is not set
 # CONFIG_PACKAGE_ext-mhi is not set
+# CONFIG_PACKAGE_ext-multimodem is not set
 # CONFIG_PACKAGE_ext-netselect is not set
 # CONFIG_PACKAGE_ext-openwisp is not set
 # CONFIG_PACKAGE_ext-ota is not set
@@ -6175,6 +6182,7 @@ CONFIG_PACKAGE_uclient-fetch=y
 # CONFIG_PACKAGE_luci-app-wrtbwmon is not set
 # CONFIG_PACKAGE_netrestart is not set
 # CONFIG_PACKAGE_pingtest is not set
+# CONFIG_PACKAGE_qfirehose is not set
 # CONFIG_PACKAGE_qlog is not set
 # CONFIG_PACKAGE_quec_upload is not set
 # CONFIG_PACKAGE_udp-tunnel is not set
@@ -6223,6 +6231,7 @@ CONFIG_PACKAGE_uclient-fetch=y
 # CONFIG_PACKAGE_wrt1900 is not set
 # CONFIG_PACKAGE_ws1208v2 is not set
 # CONFIG_PACKAGE_ws1698 is not set
+# CONFIG_PACKAGE_x1200 is not set
 # CONFIG_PACKAGE_x3000 is not set
 # CONFIG_PACKAGE_x750 is not set
 # CONFIG_PACKAGE_z2105 is not set
@@ -6269,6 +6278,7 @@ CONFIG_PACKAGE_luci-theme-material=y
 # CONFIG_PACKAGE_ext-rooter-bare is not set
 # CONFIG_PACKAGE_ext-rooter-lite is not set
 # CONFIG_PACKAGE_ext-rooter-rasppi is not set
+# CONFIG_PACKAGE_ext-rooter-rasppi16 is not set
 # CONFIG_PACKAGE_ext-rooter16 is not set
 # CONFIG_PACKAGE_ext-smart is not set
 # CONFIG_PACKAGE_ext-wifirepeat is not set
@@ -6909,7 +6919,6 @@ CONFIG_PACKAGE_pciutils=y
 # CONFIG_PACKAGE_pservice is not set
 # CONFIG_PACKAGE_psmisc is not set
 # CONFIG_PACKAGE_pv is not set
-# CONFIG_PACKAGE_qfirehose is not set
 CONFIG_PACKAGE_qmi-utils=y
 # CONFIG_PACKAGE_qrencode is not set
 # CONFIG_PACKAGE_quectel-timesync is not set
@@ -7053,4 +7062,4 @@ CONFIG_PACKAGE_ucode-mod-html=y
 # end of Font-Utils
 # end of Xorg
 
-CONFIG_OVERRIDE_PKGS="luci-app-openwisp luci-app-v2raya luci-proto-mbim qfirehose"
+CONFIG_OVERRIDE_PKGS="luci-app-openwisp luci-app-v2raya luci-proto-mbim"
