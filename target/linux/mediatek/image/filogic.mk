@@ -1591,3 +1591,26 @@ define Device/huasifei_wh3000-emmc
  endef
  TARGET_DEVICES += huasifei_wh3000-emmc
  
+define Device/z8105ax-common
+  DEVICE_VENDOR := ZBT
+  DEVICE_MODEL := Z8105AX
+  DEVICE_DTS_DIR := ../dts
+  DEVICE_PACKAGES := kmod-mt7915e kmod-mt7981-firmware mt7981-wo-firmware kmod-usb2 kmod-usb3
+  KERNEL_IN_UBI := 1
+  UBINIZE_OPTS := -E 5
+  BLOCKSIZE := 128k
+  PAGESIZE := 2048
+ifneq ($(CONFIG_TARGET_ROOTFS_INITRAMFS),)
+  ARTIFACTS := initramfs-factory.ubi
+  ARTIFACT/initramfs-factory.ubi := append-image-stage initramfs-kernel.bin | ubinize-kernel
+endif
+  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
+endef
+
+define Device/z8105ax
+  $(call Device/z8109ax-common)
+  DEVICE_VARIANT := 128 NAND
+  DEVICE_DTS := mt7981b-zbt-z8105ax
+  IMAGE_SIZE := 131072k
+endef
+TARGET_DEVICES += z8105ax
