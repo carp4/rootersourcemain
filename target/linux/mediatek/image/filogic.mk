@@ -1608,8 +1608,8 @@ endif
 endef
 
 define Device/z8105ax
-  $(call Device/z8109ax-common)
-  DEVICE_VARIANT := 128 NAND
+  $(call Device/z8105ax-common)
+  DEVICE_VARIANT := zbt-z8105ax
   DEVICE_DTS := mt7981b-zbt-z8105ax
   IMAGE_SIZE := 131072k
 endef
