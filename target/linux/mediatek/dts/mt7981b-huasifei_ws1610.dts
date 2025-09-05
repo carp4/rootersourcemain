@@ -78,14 +78,7 @@
 		compatible = "mediatek,eth-mac";
 		reg = <0>;
 		phy-mode = "2500base-x";
-		nvmem-cell-names = "mac-address";
-		nvmem-cells = <&macaddr_factory_004>;
-
-		fixed-link {
-			speed = <2500>;
-			full-duplex;
-			pause;
-		};
+		phy-handle = <&phy1>;
 	};
 	
 	gmac1: mac@1 {
@@ -97,14 +90,15 @@
 };
 
 &mdio_bus {
-	switch: switch@0 {
-		compatible = "mediatek,mt7531";
-		reg = <31>;
-		reset-gpios = <&pio 39 GPIO_ACTIVE_HIGH>;
-		interrupt-controller;
-		#interrupt-cells = <1>;
+	phy1: phy@1 {
+		compatible = "ethernet-phy-ieee802.3-c45";
+		reg = <1>;
+		reset-assert-us = <100000>;
+		reset-deassert-us = <100000>;
+		reset-gpios = <&pio 39 GPIO_ACTIVE_LOW>;
+		interrupts = <38 IRQ_TYPE_LEVEL_LOW>;
 		interrupt-parent = <&pio>;
-		interrupts = <38 IRQ_TYPE_LEVEL_HIGH>;
+		realtek,aldps-enable;
 	};
 };
 
@@ -130,7 +124,7 @@
 
 			partition@0 {
 				label = "bl2";
-				reg = <0x000000 0x100000>;
+				reg = <0x00 0x100000>;
 				read-only;
 			};
 
@@ -141,7 +135,7 @@
 
 			factory: partition@180000 {
 				label = "factory";
-				reg = <0x180000 0x100000>;
+				reg = <0x180000 0x200000>;
 				read-only;
 
 				nvmem-layout {

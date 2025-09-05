@@ -169,6 +169,7 @@ case "$board" in
 		[ "$PHYNBR" = "1" ] && macaddr_add $addr 1 > /sys${DEVPATH}/macaddress
 		;;
 	routerich,ax3000|\
+	huasifei,ws1610|\
 	zbtlink,zbt-z8102ax|\
 	zbtlink,zbt-z8103ax|\
 	z8109ax-512m|\
