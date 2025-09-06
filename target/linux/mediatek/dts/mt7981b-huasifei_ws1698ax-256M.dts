@@ -238,13 +238,6 @@
 			mediatek,pull-up-adv = <0>; /* bias-disable */
 		};
 	};
-	
-	pcie_pins: pcie-pins {
-		mux {
-			function = "pcie";
-			groups = "pcie_pereset";
-		};
-	};
 };
 
 &uart0 {
@@ -266,12 +259,6 @@
 };
 
 &xhci {
-	status = "okay";
-};
-
-&pcie {
-	pinctrl-names = "default";
-	pinctrl-0 = <&pcie_pins>;
 	status = "okay";
 };
 
