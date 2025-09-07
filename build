@@ -4,7 +4,7 @@
 core=""
 
 DATE=$(date +%Y-%m-%d)
-routersjson="./routermaster.json"
+routersjson="./routermain.json"
 templatefolder="template/"
 customfolder="custom/"
 	
