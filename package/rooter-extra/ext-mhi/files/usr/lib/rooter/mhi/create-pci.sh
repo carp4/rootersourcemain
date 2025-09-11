@@ -154,13 +154,20 @@ case "$vendor" in
 				log "Telit FN990 not supported"
 				exit 0
 			else
-				uVid="2c7c"
-				uMa="Quectel"
-				uPid="0801"
-				uPr="RM520"
-				# subvendor - 17cb  subdevice - 5201	GLAA
-				# subvendor - 17cb  subdevice - 0308	GLAP
-				# subvendor - 1eac  subdevice - 3003
+				if [ "$subvendor" = 18d7 -a "$subdevice" = 0301 ]; then
+					uPr="EM9293"
+					uMa="Sierra"
+					uVid="1199"
+					uPid="90d3"
+				else
+					uVid="2c7c"
+					uMa="Quectel"
+					uPid="0801"
+					uPr="RM520"
+					# subvendor - 17cb  subdevice - 5201	GLAA
+					# subvendor - 17cb  subdevice - 0308	GLAP
+					# subvendor - 1eac  subdevice - 3003
+				fi
 			fi
 		else
 			if [ "$device" = 0309 ]; then
