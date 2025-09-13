@@ -203,10 +203,17 @@ case "$vendor" in
 							uPid="81df"
 							uPr="T99W175"
 						else
-							uVid="2c7c"
-							uMa="Quectel"
-							uPid="0800"
-							uPr="RM500"
+							if [ "$subvendor" = 105b -a "$subdevice" = e0b0 ]; then
+								uVid="413c"
+								uMa="Foxconn"
+								uPid="81df"
+								uPr="T99W175"
+							else
+								uVid="2c7c"
+								uMa="Quectel"
+								uPid="0800"
+								uPr="RM500"
+							fi
 						fi
 					else
 						log "Modem not supported"
