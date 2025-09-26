@@ -78,12 +78,15 @@
  	{ PCI_DEVICE(PCI_VENDOR_ID_QCOM, 0x0308),
  		.driver_data = (kernel_ulong_t) &mhi_qcom_sdx65_info },
  	{ PCI_DEVICE(PCI_VENDOR_ID_QCOM, 0x0309),
-@@ -639,6 +657,8 @@
+@@ -639,6 +657,11 @@
  	/* T99W175 (sdx55), Both for eSIM and Non-eSIM */
  	{ PCI_DEVICE(PCI_VENDOR_ID_FOXCONN, 0xe0ab),
  		.driver_data = (kernel_ulong_t) &mhi_foxconn_sdx55_info },
 +	{ PCI_DEVICE(PCI_VENDOR_ID_FOXCONN, 0xe0af),
 +		.driver_data = (kernel_ulong_t) &mhi_foxconn_sdx55_info },
++    /* T99W175 (sdx55), HP variant */
++    { PCI_DEVICE(0x03f0, 0x0a6c),
++        .driver_data = (kernel_ulong_t) &mhi_foxconn_sdx55_info },
  	/* DW5930e (sdx55), With eSIM, It's also T99W175 */
  	{ PCI_DEVICE(PCI_VENDOR_ID_FOXCONN, 0xe0b0),
  		.driver_data = (kernel_ulong_t) &mhi_foxconn_sdx55_info },
