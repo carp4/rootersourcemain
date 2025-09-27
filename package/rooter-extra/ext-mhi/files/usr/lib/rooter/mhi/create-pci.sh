@@ -146,7 +146,6 @@ PCI_VENDOR_ID_QUECTEL="1eac"
 PCI_VENDOR_ID_FOXCONN="105b"
 PCI_VENDOR_ID_THALES="1269"
 PCI_VENDOR_ID_FIB="14c3"
-PCI_VENDOR_ID_HP="03fo"
 		
 case "$vendor" in
 	"$PCI_VENDOR_ID_QCOM" )
@@ -277,17 +276,7 @@ case "$vendor" in
 		uPid="7127"
 		uPr="FM350"
 	;;
-	"$PCI_VENDOR_ID_HP" )
-		if [ "$device" = 0a6c ]; then
-			uVid="413c"
-			uMa="Foxconn"
-			uPid="81df"
-			uPr="T99W175"
-		else
-			log "Foxconn not supported"
-			exit 0
-		fi
-	;;
+	
 esac
 
 
