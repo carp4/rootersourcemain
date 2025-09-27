@@ -18,4 +18,4 @@ if [ $ACTION = "add" -a ${INTERFACE} = "wwan0" ]; then
 			/usr/lib/rooter/mhi/create-pci.sh &
 		fi
 	fi
-fi
+fi 
