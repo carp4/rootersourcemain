@@ -14,7 +14,7 @@ define Package/ext-x86wifi
   SECTION:=utils
   CATEGORY:=ROOter
   SUBMENU:=Optional Applications
-  DEPENDS:=+kmod-ath10k +kmod-ath11k +kmod-ath11k-pci +kmod-ath9k +wpad \
+  DEPENDS:=+kmod-ath10k +kmod-ath11k +kmod-ath11k-pci +kmod-ath9k \
 	+kmod-mt76 +kmod-mt76-connac +kmod-mt76-core +kmod-mt7601u +kmod-mt7603 \
 	+kmod-mt7615e +kmod-mt7663s +kmod-mt7663u +kmod-mt76x0e +kmod-mt76x0u \
 	+kmod-mt76x2 +kmod-mt76x2u +kmod-mt7915e +kmod-mt7921e +kmod-mt7921s +kmod-mt7921u \
@@ -26,9 +26,9 @@ define Package/ext-x86wifi
 	+ath10k-board-qca4019 +ath10k-board-qca9377 \
 	+ath10k-board-qca9887 +ath10k-board-qca9888 +ath10k-board-qca988x \
 	+ath10k-board-qca9984 +ath10k-board-qca99x0 \
-	+ath10k-firmware-qca4019-ct +ath10k-firmware-qca6174 \
-	+ath10k-firmware-qca9377 +ath10k-firmware-qca9887-ct +ath10k-firmware-qca9888 \
-	+ath10k-firmware-qca988x-ct +ath10k-firmware-qca9984-ct +ath10k-firmware-qca99x0-ct \
+	+ath10k-firmware-qca4019 +ath10k-firmware-qca6174 \
+	+ath10k-firmware-qca9377 +ath10k-firmware-qca9887 +ath10k-firmware-qca9888 \
+	+ath10k-firmware-qca988x +ath10k-firmware-qca9984 +ath10k-firmware-qca99x0-ct \
 	+ath11k-firmware-ipq8074 +ath11k-firmware-qca6390 +ath11k-firmware-qcn9074 \
 	+ath11k-firmware-wcn6750 +ath11k-firmware-wcn6855
   TITLE:=support for wifi on x86
