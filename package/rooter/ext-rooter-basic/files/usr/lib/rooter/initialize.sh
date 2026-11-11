@@ -13,27 +13,99 @@ log() {
 	modlog "ROOter Initialize" "$@"
 }
 
+#
+# do_zone() -- rebuild the wan firewall zone's network membership.
+#
+# Two separate defects are fixed here.
+#
+# 1. Membership was written with uci_set as ONE space-joined string:
+#
+#       list network 'wan wan6 wan1 wan2 wan3 wan4 wan5 wwan2 wwan5'
+#
+#    `uci set` does not split whitespace on a list option, so fw4 looked up a
+#    single network literally named "wan wan6 wan1 ...", found no such network,
+#    and dropped the zone. wan1/wan1_6 were then in no zone at all and fell
+#    through to `jump handle_reject`. We delete the option and add one element
+#    per member instead.
+#
+# 2. The guard was `echo $network | grep "wan1"`, which matches its OWN output:
+#    once a zone had been written it contained "wan1", so the guard could never
+#    allow a repair. There was no path back to a correct zone. We compare
+#    against the membership we actually want, which is re-runnable.
+#
+# Sizing is $MODCNT, read from maxmodem, not a hardcoded ceiling: the call site
+# is after MODCNT is resolved and after the wanN/wanN_6 sections have been
+# created and committed, so every name added refers to a network that exists.
+#
+# Non-destructive by design: members already in the zone (wwan2, wwan5) are
+# preserved. Splitting $network on whitespace is what un-collapses the legacy
+# single-element blob.
+#
+# The firewall is restarted ONLY when something actually changed. Restarting it
+# unconditionally would bounce the firewall on every boot.
+#
 do_zone() {
 	local config=$1
 	local name
 	local network
+	local members
+	local member
+	local want
+	local have
+	local COUNTER=1
+	local changed=0
 
 	config_get name $1 name
+	[ "$name" = "wan" ] || return 0
+
+	# Nothing sensible to size to: leave the zone exactly as it is rather than
+	# guess. (MODCNT comes from maxmodem.maxmodem.maxmodem.)
+	case "$MODCNT" in
+		''|*[!0-9]*) return 0 ;;
+	esac
+	[ "$MODCNT" -ge 1 ] || return 0
+
 	config_get network $1 network
-	newnet=$network
-	if [ $name = wan ]; then
-		WAN1=$(echo $network | grep "wan1")
-		if [ -z $WAN1 ]; then
-			COUNTER=1
-			while [ $COUNTER -le 5 ]; do
-				newnet="$newnet wan$COUNTER"
-				let COUNTER=COUNTER+1
-			done
-			uci_set firewall "$config" network "$newnet"
-			uci_commit firewall
-			/etc/init.d/firewall restart
-		fi
+
+	members="$network"
+	while [ $COUNTER -le "$MODCNT" ]; do
+		members="$members wan$COUNTER wan${COUNTER}_6"
+		let COUNTER=COUNTER+1
+	done
+
+	# de-duplicate, preserving first-seen order, so the comparison below is
+	# stable across boots instead of oscillating
+	want=""
+	for member in $members; do
+		case " $want " in
+			*" $member "*) continue ;;
+		esac
+		want="$want $member"
+	done
+
+	have=$(echo $network | tr -s ' \t\n' ' ' | sed 's/^ *//;s/ *$//')
+	want=$(echo $want | sed 's/^ *//;s/ *$//')
+
+	if [ "$have" != "$want" ]; then
+		uci -q delete firewall."$config".network
+		for member in $want; do
+			uci add_list firewall."$config".network="$member"
+		done
+		changed=1
 	fi
+
+	# masq6 is what enables NAT66 -- keep setting it, and keep counting it as
+	# a change worth restarting for.
+	MASQ6=$(uci_get firewall "$config" masq6)
+	if [ -z "$MASQ6" ]; then
+		uci_set firewall "$config" masq6 "1"
+		changed=1
+	fi
+
+	[ "$changed" = 1 ] || return 0
+
+	uci_commit firewall
+	/etc/init.d/firewall restart
 }
 
 firstboot() {
@@ -57,8 +129,11 @@ firstboot() {
 
 	log "ROOter First Boot finalized"
 
-	config_load firewall
-	config_foreach do_zone zone
+	# do_zone() used to run HERE. It cannot: at this point maxmodem has not been
+	# resolved yet and the wanN / wanN_6 network sections have not been created
+	# or committed, so a zone built from them referenced sections that did not
+	# exist. The call has moved down to just after `uci commit mwan3`, where
+	# $MODCNT is known and the interfaces exist. See the call site below.
 
 	source /etc/openwrt_release
 	DR=$DISTRIB_RELEASE
@@ -261,6 +336,17 @@ uci commit network
 if [ -e /etc/config/mwan3 ]; then
 	uci commit mwan3
 fi
+
+# Rebuild the wan firewall zone here, and only here.
+#
+# This is the earliest point at which every precondition holds:
+#   - $MODCNT is resolved (read from maxmodem.maxmodem.maxmodem above)
+#   - wanN / wanN_6 network sections have been created (the loop above)
+#   - network has been committed          (so fw4 sees the interfaces)
+#   - mwan3 has been committed
+# Inside firstboot() none of these were true, which is why this call was moved.
+config_load firewall
+config_foreach do_zone zone
 
 if [ -e $ROOTER/removeipv6.sh ]; then
 	$ROOTER/removeipv6.sh
