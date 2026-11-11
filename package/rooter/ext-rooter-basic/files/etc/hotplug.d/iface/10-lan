@@ -3,7 +3,14 @@
 logger -t URL-DEBUG "hotplug (iface): action='$ACTION' interface='$INTERFACE'"
 
 if [ "$ACTION" = ifup -a "$INTERFACE" = "lan" ]; then
-	IP=$(uci get network.lan.ipaddr)
+	# dnsmasq's "address=" directive wants a bare address. network.lan.ipaddr
+	# may legitimately carry a prefix length (a fresh config_generate writes one
+	# bare, but an imported/preserved config often has "192.168.1.1/24"), and
+	# pasting that in makes dnsmasq refuse to start:
+	#     dnsmasq: Bad address in --address at line 2 of /etc/dnsmasq.conf
+	# which takes the whole DNS resolver down with it. Strip the prefix.
+	IP=$(uci -q get network.lan.ipaddr | cut -d/ -f1)
+	[ -z "$IP" ] && exit 0
 	ipaddr=$(cat /etc/dnsmasq.conf | grep "address=/rooter.local/")
 	if [ ! -z $ipaddr ]; then
 		ipaddr=$(echo "$ipaddr" | sed -e "s!address=/rooter.local/!!g")
