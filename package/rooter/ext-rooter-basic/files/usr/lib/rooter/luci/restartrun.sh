@@ -145,6 +145,30 @@ echo "0" > /tmp/usbwait
 uVid=$(uci get modem.modem$CURRMODEM.uVid)
 uPid=$(uci get modem.modem$CURRMODEM.uPid)
 
+PRESERVE=$(uci -q get modem.modeminfo$CURRMODEM.preserve)
+[ -z "$PRESERVE" ] && PRESERVE=1
+if [ "$PRESERVE" = "1" ]; then
+	# Read-only check: is the modem still carrying a live session?
+	# If so, do NOT hard-reset it (AT+CFUN=1,1 / AT+QPOWD) — just bounce netifd.
+	ALREADY=0
+	MATCH="$(uci -q get modem.modem$CURRMODEM.maxcontrol | cut -d/ -f3- | xargs dirname 2>/dev/null)"
+	if [ -n "$MATCH" ]; then
+		OX="$(for a in /sys/class/net/*; do readlink $a; done | grep "$MATCH")"
+		ifname=$(basename $OX 2>/dev/null)
+		if [ -n "$ifname" ] && [ -d /sys/class/net/$ifname ]; then
+			[ "$(cat /sys/class/net/$ifname/operstate 2>/dev/null)" = "up" ] && ALREADY=1
+			[ -n "$(ip -o addr show dev $ifname 2>/dev/null | grep -v " fe80::")" ] || ALREADY=0
+		fi
+	fi
+	if [ "$ALREADY" = "1" ]; then
+		log "Preserve: modem still connected ($ifname) — skipping hard reset"
+		rm -f /tmp/usbwait
+		ifdown wan$INTER
+		ifup wan$INTER
+		exit 0
+	fi
+fi
+
 proto=$(uci -q get modem.modem$CURRMODEM.proto)
 if [ "$proto" = 91 ]; then
 	lspci -k > /tmp/mhipci
