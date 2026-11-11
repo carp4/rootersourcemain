@@ -129,10 +129,10 @@ else
 	else
 		r1="nft add rule inet fw4 mangle_postrouting oifname $IFACE ip ttl set $TTL"
 		r2="nft add rule inet fw4 mangle_prerouting oifname $IFACE ip ttl set $TTL"
-		r3="nft add rule inet fw4 mangle_postrouting protocol icmp oifname $IFACE ip ttl set $TTL"
-		r4="nft add rule inet fw4 mangle_postrouting oifname $IFACE ip6 hoplimit set $HL"
-		r5="nft add rule inet fw4 mangle_prerouting oifname $IFACE ip6 hoplimit set $HL"
-		r6="nft add rule inet fw4 mangle_postrouting protocol icmp oifname $IFACE ip6 hoplimit set $HL"
+		r3="nft add rule inet fw4 mangle_postrouting ip protocol icmp oifname $IFACE ip ttl set $TTL"
+		r4="nft add rule inet fw4 mangle_postrouting meta l4proto != icmpv6 oifname $IFACE ip6 hoplimit set $HL"
+		r5="nft add rule inet fw4 mangle_prerouting meta l4proto != icmpv6 oifname $IFACE ip6 hoplimit set $HL"
+		r6="nft add rule inet fw4 mangle_postrouting meta l4proto icmpv6 oifname $IFACE ip6 hoplimit set $HL"
 	fi
 
 	if [ "$TTLOPTION" = "0" ]; then
