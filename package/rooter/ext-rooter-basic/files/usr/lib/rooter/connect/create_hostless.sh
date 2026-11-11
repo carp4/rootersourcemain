@@ -275,6 +275,43 @@ check_ip() {
 	fi
 }
 
+modem_already_connected() {
+	# Read-only detection: a modem already carrying a live data session
+	# (e.g. its own connection manager like qmanager). NEVER runs disruptive
+	# AT writes here. Returns 0 = connected, 1 = not proven connected.
+	local iface6 addr6 addr4
+
+	# Secondary: netdev L3 check on the ECM data port.
+	if [ -n "$1" ]; then
+		[ -d /sys/class/net/$1 ] || { log "connected-check: netdev $1 missing"; }
+		if [ -d /sys/class/net/$1 ]; then
+			if [ "$(cat /sys/class/net/$1/operstate 2>/dev/null)" = "up" ]; then
+				addr4=$(ip -4 -o addr show dev $1 2>/dev/null | grep -v " scope host " | grep -v "127.0.0.1")
+				addr6=$(ip -6 -o addr show dev $1 2>/dev/null | grep -v " fe80::")
+				addr6=$(echo "$addr6" | grep "^[0-9a-fA-F]*: *[23]")
+				if [ -n "$addr4" ] || [ -n "$addr6" ]; then
+					log "Modem already connected (ECM netdev $1 has live address)"
+					return 0
+				fi
+			fi
+		fi
+	fi
+
+	# Primary: read-only AT query. Same style as get_ip(). Pure read.
+	if [ -n "$CPORT" ]; then
+		local OX IPRES
+		OX=$($ROOTER/gcom/gcom-locked "/dev/ttyUSB$CPORT" "run-at.gcom" "$CURRMODEM" "AT+CGPADDR")
+		IPRES=$(echo "$OX" | grep "+CGPADDR:" | grep -oE "([0-9]{1,3}\.){3}[0-9]{1,3}|[0-9a-fA-F]+:")
+		if [ -n "$IPRES" ]; then
+			log "Modem already connected (AT+CGPADDR reports $IPRES)"
+			return 0
+		fi
+	fi
+
+	log "Modem not proven already-connected; proceeding with connection setup"
+	return 1
+}
+
 addv6() {
 	. /lib/functions.sh
 	. /lib/netifd/netifd-proto.sh
@@ -286,8 +323,11 @@ addv6() {
 	uci set network.wan$INTER"_6".proto='dhcpv6'
 	uci set network.wan$INTER"_6".$ifname1="@wan$INTER"
 	uci set network.wan$INTER"_6".reqaddress='try'
-	uci set network.wan$INTER"_6".reqprefix='auto'
 	uci set network.wan$INTER"_6".iface_464xlat='0'
+	uci set network.wan$INTER"_6".reqprefix='60'
+	uci set network.wan$INTER"_6".metric=$((INTER*10))
+	uci set network.wan$INTER"_6".multipath='off'
+	uci set network.wan$INTER"_6".norelease='1'
 	TINTER=$INTER
 	INTER=$INTER"_6"
 	set_dns
@@ -604,6 +644,90 @@ else
 	log "Modem $CURRMODEM - No ECM Data Port found"
 fi
 uci commit modem
+
+#
+# Preserve-existing-connection guard.
+# If the modem is ALREADY carrying a live data session (its own connection
+# manager such as qmanager), do not touch it: no profile APN takeover, no
+# AT+CFUN/CGDCONT/CGDCONT writes, no reboot. Just map the ECM data port,
+# bring up the netifd interface and let conmon monitor it.
+#
+PRESERVE=$(uci -q get modem.modeminfo$CURRMODEM.preserve)
+[ -z "$PRESERVE" ] && PRESERVE=1
+if [ "$PRESERVE" = "1" ] && [ -n "$ifname" ]; then
+	if modem_already_connected "$ifname"; then
+		log "Preserving existing modem connection (no AT-command changes)"
+		rm -f /tmp/usbwait
+		# ROOter-side post-connect steps run in the SAME order as the normal
+		# path (handlettl right after the ECM port is mapped): TTL/HL + CAKE
+		# are applied before connection status is flagged, so the chkconn
+		# watcher's 'Normal Exit' stays the last log line, matching the normal
+		# path (connected=1 is written after the TTL block, not before it).
+		# AT-side machinery is never replicated here - the modem already owns
+		# the session.
+		hostless=$(uci -q get modem.modeminfo$CURRMODEM.hostless)
+		$ROOTER/connect/handlettl.sh $CURRMODEM "$hostless" &
+		if [ -e $ROOTER/connect/quic_bypass.sh ]; then
+			$ROOTER/connect/quic_bypass.sh $CURRMODEM
+		fi
+		ifup wan$INTER
+		while `ifstatus wan$INTER | grep -q '"up": false\|"pending": true'`; do
+			sleep 1
+		done
+		# IPv6 helper for the preserved connection, mirroring the normal-path
+		# addv6(): the modem already carries its own data session, and wanN_6
+		# (dhcpv6 @wanN) is what gold exposes for IPv6 + mwan3 tracking. The
+		# _6 placeholder interface is already created by initialize.sh; this
+		# converts it to dhcpv6 and brings it up with the same uci block.
+		addv6
+		wan_ip=$(expr "`ifstatus wan$INTER | grep '"nexthop":'`" : '.*"nexthop": "\(.*\)"')
+		if [ $? -ne 0 ] ; then
+			wan_ip=192.168.0.1
+		fi
+		uci set modem.modem$CURRMODEM.ip=$wan_ip
+		uci commit modem
+		$ROOTER/log/logger "HostlessModem #$CURRMODEM preserved (already connected) with IP $wan_ip"
+		if [ -e $ROOTER/modem-led.sh ]; then
+			$ROOTER/modem-led.sh $CURRMODEM 3
+		fi
+		PROT=5
+		ln -s $ROOTER/signal/modemsignal.sh $ROOTER_LINK/getsignal$CURRMODEM
+		$ROOTER_LINK/getsignal$CURRMODEM $CURRMODEM $PROT &
+		ln -s $ROOTER/connect/conmon.sh $ROOTER_LINK/con_monitor$CURRMODEM
+		$ROOTER_LINK/con_monitor$CURRMODEM $CURRMODEM &
+		# Connection status is flagged only AFTER the ROOter-side post-connect
+		# steps (mirroring the normal path) so the chkconn watcher's
+		# 'Normal Exit' always lands after TTL/HL/PostConnect/TimeZone logs.
+		uci set modem.modem$CURRMODEM.connected=1
+		uci commit modem
+		if [ $SP -gt 0 ]; then
+			if [ -e $ROOTER/connect/postconnect.sh ]; then
+				$ROOTER/connect/postconnect.sh $CURRMODEM
+			fi
+			if [ -e $ROOTER/timezone.sh ]; then
+				TZ=$(uci -q get modem.modeminfo$CURRMODEM.tzone)
+				if [ "$TZ" = "1" ]; then
+					log "Set TimeZone"
+					$ROOTER/timezone.sh &
+				fi
+			fi
+		fi
+		CLB=1
+		if [ -e /etc/config/mwan3 ]; then
+			ENB=$(uci -q get mwan3.wan$INTER.enabled)
+			if [ ! -z "$ENB" ]; then
+				if [ "$CLB" = "1" ]; then
+					uci set mwan3.wan$INTER.enabled=1
+				else
+					uci set mwan3.wan$INTER.enabled=0
+				fi
+				uci commit mwan3
+				/usr/sbin/mwan3 restart
+			fi
+		fi
+		exit 0
+	fi
+fi
 
 hostless=$(uci -q get modem.modeminfo$CURRMODEM.hostless)
 $ROOTER/connect/handlettl.sh $CURRMODEM "$hostless" &
