@@ -106,6 +106,11 @@ ynl:value("0", "No")
 ynl:value("1", translate("Yes"))
 ynl.default=0
 
+pres = di:taboption(this_tab, ListValue, "preserve", translate("Skip Connection Script for Hostless Modem if Already Connected"));
+pres:value("0", translate("No"))
+pres:value("1", translate("Yes"))
+pres.default=1
+
 pt = di:taboption(this_tab, ListValue, "pdptype", translate("Protocol Type :"))
 pt:value("IP", "IPv4")
 pt:value("IPV6", "IPv6")
@@ -519,6 +524,11 @@ cb2.default="8.8.8.8"
 		nl:value("0", translate("No"))
 		nl:value("1", translate("Yes"))
 		nl.default=0
+
+		pres = s:taboption(this_ctab, ListValue, "preserve", translate("Skip Connection Script for Hostless Modem if Already Connected"));
+		pres:value("0", translate("No"))
+		pres:value("1", translate("Yes"))
+		pres.default=1
 
 		pt = s:taboption(this_ctab, ListValue, "pdptype", translate("Protocol Type :"))
 		pt:value("IP", "IPv4")

@@ -253,6 +253,11 @@ do_custom() {
 						hostless="0"
 					fi
 					uci set modem.modeminfo$CURRMODEM.hostless="$hostless"
+					config_get preserve $1 preserve
+					if [ -z "$preserve" ]; then
+						preserve="1"
+					fi
+					uci set modem.modeminfo$CURRMODEM.preserve="$preserve"
 					config_get bwday $1 bwday
 					if [ -z $bwday ]; then
 						bwday="0"
@@ -440,6 +445,11 @@ if [ $MATCH = 0 ]; then
 		hostless="0"
 	fi
 	uci set modem.modeminfo$CURRMODEM.hostless="$hostless"
+	preserve=$(uci -q get profile.default.preserve)
+	if [ -z "$preserve" ]; then
+		preserve="1"
+	fi
+	uci set modem.modeminfo$CURRMODEM.preserve="$preserve"
 	bwday=$(uci -q get profile.default.bwday)
 	if [ -z $bwday ]; then
 		bwday="0"
