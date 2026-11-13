@@ -5,7 +5,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ext-rooter-basic
 PKG_VERSION:=4.500
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 PKG_MAINTAINER:=Created by DM/makefile by Cobia@whirlpool
 include $(INCLUDE_DIR)/package.mk
