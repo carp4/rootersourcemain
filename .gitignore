@@ -1,0 +1,12 @@
+*.o
+.DS_Store
+.*.swp
+/bin
+/build_dir
+/dl
+/files
+/logs
+/staging_dir
+/tmp
+/.config
+/.config.old
