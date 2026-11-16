@@ -10,3 +10,6 @@
 /tmp
 /.config
 /.config.old
+key-build*
+private-key.pem
+public-key.pem
